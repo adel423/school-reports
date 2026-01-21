@@ -1,0 +1,3438 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير المصلحة البيداغوجية - ثانوية الشهيد محمد بوصبيعات</title>
+    <!-- SheetJS لتصدير Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* كل الأنماط كما هي بدون تغيير */
+        @page { size: A4; margin: 0.3cm; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
+        body { background-color: white; color: #000; line-height: 1.2; font-size: 12px; width: 35cm; margin: 0 auto; padding: 0 cm; }
+        .page { width: 35cm; margin: 0 auto; background: white; }
+        .header-container { margin-bottom: 5px; }
+        .ministry { text-align: center; font-weight: bold; font-size: 12px; margin-bottom: 3px; }
+        .directorate { text-align: right; font-weight: bold; font-size: 12px; margin-bottom: 2px; }
+        .school-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+        .school-name { text-align: right; flex: 1; }
+        .academic-year { text-align: center; flex: 1; }
+        .report-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 12px; }
+        .report-number { display: flex; align-items: center; gap: 2px; }
+        .report-date { display: flex; align-items: center; gap: 8px; }
+        .main-title { text-align: center; font-weight: bold; font-size: 13px; text-decoration: underline; margin: 6px 0; }
+        .section-header { text-align: right; font-weight: bold; font-size: 12px; margin: 1px 0; padding-right: 3px; }
+        .sub-section-header { text-align: right; font-weight: bold; font-size: 12px; margin: 2px 0; padding-right: 3px; display: flex; align-items: center; gap: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 2px 0; font-size: 12px; }
+        th, td { border: 1px solid #000; padding: 2px 3px; text-align: center; vertical-align: middle; }
+        th { background-color: #f0f0f0; font-weight: bold; }
+        .attendance-table th { font-size: 12px; padding: 1px 2px; }
+        .period-header { font-size: 12px; line-height: 1; white-space: pre-line; }
+        input[type="text"], input[type="number"], select { width: 100%; border: none; background: transparent; font-size: 12px; text-align: center; padding: 0; height: 16px; min-height: 16px; }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus { outline: 1px solid #4CAF50; background-color: #f8fff8; }
+        select { cursor: pointer; }
+        .notes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0; }
+        .notes-box { border: 1px solid #000; padding: 4px; min-height: 85px; }
+        .notes-title { text-align: center; font-weight: bold; font-size: 12px; margin-bottom: 2px; padding-bottom: 1px; border-bottom: 1px solid #000; }
+        .notes-item { margin-bottom: 2px; }
+        textarea { width: 100%; height: 25px; border: 1px solid #ddd; padding: 2px; font-size: 12px; resize: vertical; }
+        .notes-item:nth-child(2) textarea { height: 15px !important; min-height: 15px !important; }
+        .notes-box:first-child .notes-item:nth-child(2) textarea,
+        .notes-box:last-child .notes-item:nth-child(1) textarea { height: 15px !important; min-height: 15px !important; font-size: 12px !important; }
+        .notes-item:nth-child(3) textarea { height: 18px; }
+        .notes-item:last-child textarea { height: 18px; }
+        .notes-content { display: flex; flex-direction: column; gap: 1px; }
+        .signatures { display: flex; justify-content: space-between; margin-top: 5px; }
+        .signature-box { text-align: center; width: 120px; font-size: 12px; padding-top: 25px; border-top: 1px solid #000; }
+        .page-break-container { page-break-inside: avoid; break-inside: avoid; }
+        .signatures-wrapper { margin-top: 15px; padding-top: 8px; border-top: 1px solid #000; position: relative; page-break-before: avoid; page-break-after: avoid; page-break-inside: avoid; }
+        .controls { position: fixed; top: 10px; left: 10px; background: white; padding: 8px; border-radius: 3px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); z-index: 1000; font-size: 12px; transition: all 0.3s ease; }
+        .controls.collapsed { width: 40px; height: 40px; overflow: hidden; padding: 5px; }
+        .controls.collapsed .btn:not(.toggle-btn), .controls.collapsed .file-info { display: none; }
+        .toggle-btn { position: absolute; top: 5px; right: 5px; width: 30px; height: 30px; background: #666; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        .btn { padding: 5px 8px; margin: 2px 0; border: none; border-radius: 2px; cursor: pointer; font-weight: bold; width: 100%; font-size: 12px; }
+        .btn-load { background-color: #2196F3; color: white; }
+        .btn-save { background-color: #4CAF50; color: white; }
+        .btn-export { background-color: #FF9800; color: white; }
+        .btn-computer { background-color: #607D8B !important; color: white !important; }
+        .file-info { font-size: 12px; color: #666; margin-top: 5px; text-align: center; }
+        .autocomplete { position: relative; }
+        .autocomplete-items { position: absolute; border: 1px solid #d4d4d4; border-bottom: none; z-index: 99; top: 100%; right: 0; left: 0; background: white; max-height: 150px; overflow-y: auto; font-size: 12px; direction: rtl; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .autocomplete-items div { padding: 4px 8px; cursor: pointer; border-bottom: 1px solid #d4d4d4; text-align: right; }
+        .autocomplete-items div:hover { background-color: #e9e9e9; }
+        .autocomplete-active { background-color: #2196F3 !important; color: white !important; }
+        .two-tables-row { display: flex; gap: 8px; margin: 4px 0; }
+        .table-wrapper { flex: 1; }
+        .small-input { width: 40px !important; margin: 0 auto; }
+        .row-tables-container { display: flex; gap: 10px; margin: 2px 0; }
+        .employee-table-wrapper { flex: 1; }
+        .summary-table-wrapper { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .dual-summary-tables { display: flex; flex-direction: column; gap: 4px; }
+        .small-table { font-size: 12px; margin: 0; }
+        .small-table th { padding: 1px 2px; font-size: 12px; }
+        .small-table td { padding: 1px 2px; }
+        .compact-staff-table { font-size: 12px; }
+        .compact-staff-table th { padding: 2px 3px; font-size: 12px; }
+        .compact-staff-table td { padding: 2px 3px; }
+        .compact-input { width: 100%; border: none; background: transparent; font-size: 12px; text-align: center; padding: 0; height: 14px; }
+        .very-small-input { width: 30px !important; margin: 0 auto; font-size: 12px; height: 12px; }
+        .section-compact-title { text-align: right; font-weight: bold; font-size: 12px; margin: 1px 0; line-height: 1.1; }
+        .students-section { margin: 2px 0; }
+        .years-container { display: flex; gap: 8px; margin: 0; }
+        .compact-years-table { font-size: 12px !important; margin: 0 !important; }
+        .compact-years-table th { padding: 0px 1px !important; height: 18px !important; font-size: 12px !important; line-height: 1 !important; }
+        .compact-years-table td { padding: 0px 1px !important; height: 16px !important; line-height: 1 !important; }
+        .years-input { width: 100% !important; height: 14px !important; min-height: 14px !important; font-size: 12px !important; padding: 0 !important; margin: 0 !important; border: none !important; text-align: center !important; background: transparent !important; }
+        .years-registered { width: 100% !important; height: 14px !important; min-height: 14px !important; font-size: 12px !important; padding: 0 !important; margin: 0 !important; border: none !important; text-align: center !important; background: transparent !important; color: #2e7d32; font-weight: bold; }
+        .years-registered:focus { background-color: #f0fff0 !important; outline: 1px solid #4CAF50; }
+        .side-tables { flex: 1; display: flex; flex-direction: column; gap: 2px !important; }
+        .compact-side-table { font-size: 12px !important; margin: 0 !important; }
+        .compact-side-table th { padding: 0px 1px !important; height: 16px !important; font-size: 12px !important; line-height: 1 !important; }
+        .compact-side-table td { padding: 0px 1px !important; height: 14px !important; line-height: 1 !important; text-align: center !important; }
+        .compact-side-table .small-input { width: 35px !important; height: 12px !important; font-size: 12px !important; margin: 0 auto !important; }
+        .section-header { margin: 1px 0 !important; }
+        .section-compact-title { margin: 1px 0 !important; font-size: 12px !important; line-height: 1.1 !important; }
+        .students-absence-section { margin-bottom: 3px !important; }
+        .absent-students-page { 
+            width: 23cm; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 0.3cm;
+            padding-top: 0.5cm;
+            box-sizing: border-box;
+            min-height: 29.7cm;
+        }
+        .absent-students-title { 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 14px; 
+            margin-bottom: 10px;
+            text-decoration: underline; 
+        }
+        .absent-students-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 10px;
+            font-size: 12px; 
+        }
+        .absent-students-table th, .absent-students-table td { 
+            border: 1px solid #000; 
+            padding: 3px 5px; 
+            text-align: center; 
+            vertical-align: middle; 
+        }
+        .absent-students-table th { 
+            background-color: #f0f0f0; 
+            font-weight: bold; 
+            height: 25px; 
+        }
+        .absent-students-table td { 
+            height: 20px; 
+        }
+        .absent-students-table .student-name { width: 150px; }
+        .absent-students-table .student-class { width: 80px; }
+        .absent-students-table .correspondence { width: 120px; }
+        .absent-students-input { width: 100%; border: none; background: transparent; font-size: 12px; text-align: center; padding: 2px; height: 20px; }
+        .director-notes { 
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .director-notes-title { text-align: right; font-weight: bold; font-size: 12px; margin-bottom: 5px; }
+        .director-notes-box { 
+            border: 1px solid #000; 
+            padding: 8px; 
+            min-height: 60px; 
+            font-size: 12px; 
+        }
+        .director-signature { 
+            margin-top: 20px; 
+            text-align: left; 
+            font-size: 12px; 
+        }
+        .director-signature-line { 
+            margin-top: 30px; 
+            border-top: 1px solid #000; 
+            padding-top: 5px; 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 12px; 
+        }
+        .system-message { position: fixed; top: 20px; right: 20px; padding: 15px; border-radius: 5px; z-index: 3000; display: none; max-width: 400px; }
+        .success-message { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error-message { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info-message { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        /* تحسين الطباعة */
+        @media print {
+            body, html { 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                width: 21cm !important; 
+                height: auto !important; 
+                background: white !important; 
+            }
+            
+            .controls, .toggle-btn, .btn, .archive-controls, .archive-toggle { 
+                display: none !important; 
+            }
+            
+            .page { 
+                width: 21cm !important;
+                min-height: 29.7cm !important;
+                margin: 0 !important;
+                padding: 0.5cm !important;
+                page-break-inside: avoid !important;
+                page-break-after: always !important;
+                box-shadow: none !important;
+            }
+            
+            .page:last-child {
+                page-break-after: auto !important;
+            }
+            
+            .absent-students-page {
+                width: 21cm !important;
+                min-height: 29.7cm !important;
+                margin: 0 !important;
+                padding: 0.5cm !important;
+                padding-top: 0.5cm !important;
+                page-break-before: always !important;
+            }
+            
+            /* إزالة الإطارات المزدوجة في الطباعة */
+            input[type="text"], 
+            input[type="number"], 
+            select, 
+            textarea {
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+                color: #000 !important;
+                font-weight: normal !important;
+            }
+        }
+        
+        .page { 
+            width: 23cm; 
+            min-height: 29.7cm; 
+            margin: 0 auto 20px auto; 
+            padding: 0.3cm; 
+            background: white; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+            box-sizing: border-box; 
+            position: relative; 
+        }
+        .absent-students-page { 
+            width: 23cm; 
+            min-height: 29.7cm; 
+            margin: 0 auto; 
+            padding: 0.3cm; 
+            padding-top: 0.5cm; 
+            background: white; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+            box-sizing: border-box; 
+        }
+        body { width: 21cm; margin: 0; padding: 0; font-size: 12px; }
+        .page { width: 23cm; margin: 0 auto; background: white; }
+        .page:first-of-type {  }
+        .absent-students-page { width: 23cm; margin: 0 auto; background: white; }
+        select { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
+        .page:last-of-type { break-after: auto; }
+        table { page-break-inside: avoid; break-inside: avoid; }
+        tr { page-break-inside: avoid; break-inside: avoid; }
+        .login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .login-content { background-color: #e8f5e9; padding: 30px; border-radius: 10px; width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid #4CAF50; box-sizing: border-box; }
+        .login-title { text-align: center; font-size: 18px; margin-bottom: 20px; color: #2e7d32; font-weight: bold; }
+        .login-input { width: 100% !important; height: 45px; padding: 10px 15px; margin: 10px 0; border: 2px solid #4CAF50 !important; border-radius: 5px; font-size: 14px; background-color: white !important; color: #000000 !important; font-weight: bold; box-sizing: border-box; display: block; outline: none; }
+        #username { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%231b5e20' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: left 15px center; background-size: 12px; padding-left: 35px; cursor: pointer; }
+        #password { color: #000000 !important; font-weight: bold; }
+        .login-input:focus { border-color: #2e7d32 !important; box-shadow: 0 0 5px rgba(46, 125, 50, 0.2); }
+        #username option { color: #000000 !important; font-weight: bold; background-color: white; }
+        #username option[value=""] { color: #1b5e20 !important; font-style: italic; }
+        .login-btn { width: 100%; padding: 12px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; font-weight: bold; transition: background 0.3s; }
+        .login-btn:hover { background-color: #45a049; }
+        .login-error { color: #d32f2f; text-align: center; margin-top: 10px; padding: 8px; background-color: #ffebee; border-radius: 4px; display: none; }
+        .login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .user-role { position: fixed; top: 10px; right: 10px; background: #4CAF50; color: white; padding: 5px 10px; border-radius: 3px; font-size: 12px; z-index: 1001; }
+        .export-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .export-modal-content { background-color: white; padding: 20px; border-radius: 10px; width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .export-modal-title { text-align: center; font-size: 18px; margin-bottom: 15px; color: #333; }
+        .hidden-row { display: none; }
+        .readonly-mode input,
+        .readonly-mode select,
+        .readonly-mode textarea {
+            background: #f5f5f5 !important;
+            color: #333 !important;
+            pointer-events: none;
+        }
+        
+        .readonly-mode .director-notes-box {
+            background: #f5f5f5 !important;
+            pointer-events: none;
+        }
+        
+        /* ستايلات تحسين واجهة التصدير */
+        .export-date-range {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .export-date-input {
+            flex: 1;
+            position: relative;
+        }
+        
+        .export-date-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .export-date-input input {
+            width: 100% !important;
+            height: 35px !important;
+            padding: 8px 12px !important;
+            border: 2px solid #4CAF50 !important;
+            border-radius: 5px !important;
+            font-size: 12px !important;
+            text-align: center !important;
+            direction: ltr !important;
+            background-color: white !important;
+        }
+        
+        .export-date-input input::placeholder {
+            color: #999;
+            text-align: center;
+        }
+        
+        .export-preview-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .export-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .export-stat-item {
+            text-align: center;
+            padding: 5px;
+        }
+        
+        .export-stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 2px;
+        }
+        
+        .export-stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .export-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .export-actions .btn {
+            flex: 1;
+            padding: 10px !important;
+            font-size: 12px !important;
+        }
+        
+        /* تحسين تاريخ الإدخال */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        
+        .date-hint {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 5px;
+            direction: rtl;
+        }
+        
+        .date-example {
+            color: #2196F3;
+            font-weight: bold;
+        }
+        
+        /* مؤشر تحميل */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 3000;
+            display: none;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .loading-indicator .loader {
+            margin: 10px auto;
+        }
+        
+        .warning-message {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        /* تعديل لون الحدود في حالة القراءة فقط */
+        .readonly-mode .years-input,
+        .readonly-mode .years-registered,
+        .readonly-mode .small-input,
+        .readonly-mode .very-small-input {
+            border: 1px solid #ddd !important;
+        }
+        
+        /* تعديل جديد: جعل الجدول في الصفحة الثانية يأتي مباشرة بعد ملاحظات المشرف والناظر */
+        .notes-and-absent-table-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        /* تعديل حجم المربعات لجعلها أصغر */
+        .notes-box-small {
+            border: 1px solid #000;
+            padding: 3px;
+            min-height: 70px;
+            font-size: 11px;
+        }
+        
+        .notes-box-small .notes-content {
+            gap: 0px;
+        }
+        
+        .notes-box-small textarea {
+            height: 15px !important;
+            min-height: 15px !important;
+            font-size: 11px !important;
+            padding: 1px !important;
+        }
+        
+        .notes-box-small .notes-title {
+            font-size: 11px !important;
+            margin-bottom: 1px !important;
+            padding-bottom: 1px !important;
+        }
+        
+        .notes-box-small .notes-item {
+            margin-bottom: 1px !important;
+        }
+        
+        .notes-box-small .notes-item strong {
+            font-size: 11px !important;
+        }
+        
+        /* وقت الإغلاق */
+        .closing-time-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 10px;
+            display: none;
+        }
+        
+        .closing-time-warning.show {
+            display: block;
+        }
+        
+        /* تم إضافة مؤشر الرقم التسلسلي */
+        .report-number-auto {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        /* تنسيق إضافي لتحسين الطباعة */
+        .print-only {
+            display: none;
+        }
+        
+        @media print {
+            .print-only {
+                display: block !important;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        /* نمط عام لإخفاء placeholders عند الطباعة */
+        @media print {
+            ::placeholder {
+                color: transparent !important;
+            }
+            
+            :-ms-input-placeholder {
+                color: transparent !important;
+            }
+            
+            ::-ms-input-placeholder {
+                color: transparent !important;
+            }
+        }
+        
+        /* تحسين عرض الحقول الفارغة في العرض العادي */
+        input:placeholder-shown,
+        textarea:placeholder-shown {
+            color: #999;
+        }
+        
+        /* منع ظهور الحدود المزدوجة في العرض العادي */
+        input, select, textarea {
+            border: 1px solid #ccc !important;
+        }
+        
+        /* فقط عند التركيز تظهر حدود مختلفة */
+        input:focus, select:focus, textarea:focus {
+            border: 1px solid #4CAF50 !important;
+            background-color: #f8fff8 !important;
+        }
+        
+        /* قائمة البيانات الأساسية المدمجة */
+        .embedded-data {
+            display: none;
+        }
+        
+        /* GitHub Storage */
+        .github-storage {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .github-storage h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            text-align: center;
+        }
+        
+        .github-url-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            direction: ltr;
+        }
+        
+        .github-url-input:focus {
+            outline: none;
+            border-color: #2e7d32;
+        }
+        
+        /* تحسين عرض الإكمال التلقائي */
+        .autocomplete-suggestion {
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .autocomplete-suggestion:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .autocomplete-suggestion .name {
+            font-weight: bold;
+            text-align: right;
+            flex: 2;
+        }
+        
+        .autocomplete-suggestion .info {
+            color: #666;
+            font-size: 11px;
+            text-align: left;
+            flex: 1;
+            padding-right: 10px;
+        }
+        
+        .autocomplete-items {
+            max-height: 250px !important;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 5px;
+            border: 1px solid #4CAF50;
+        }
+        
+        .autocomplete-items div:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- نافذة تسجيل الدخول -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <div class="login-title">تسجيل الدخول</div>
+            <select id="username" class="login-input">
+                <option value="">اختر دور المستخدم</option>
+                <option value="supervisor">المشرف العام</option>
+                <option value="nazer">الناظر</option>
+                <option value="director">مدير المؤسسة</option>
+            </select>
+            <input type="password" id="password" class="login-input" placeholder="كلمة المرور">
+            <button class="login-btn" onclick="login()">دخول</button>
+            <div id="loginError" class="login-error">الدور أو كلمة المرور غير صحيحة</div>
+        </div>
+    </div>
+
+    <!-- نافذة إعدادات GitHub -->
+    <div id="githubSetupModal" class="login-modal">
+        <div class="login-content">
+            <div class="login-title">⚙️ إعدادات التخزين السحابي</div>
+            <p style="text-align: center; margin-bottom: 20px; color: #666; font-size: 12px;">
+                أدخل رابط GitHub الخاص بك لتخزين التقارير
+            </p>
+            
+            <input type="text" id="setupGithubUrl" class="login-input" 
+                   placeholder="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/"
+                   value="">
+            
+            <div style="margin: 15px 0; padding: 10px; background: #e8f5e9; border-radius: 5px;">
+                <strong>📝 كيفية الحصول على الرابط:</strong>
+                <ol style="text-align: right; margin: 10px 0; padding-right: 15px; font-size: 11px;">
+                    <li>أنشئ مستودع جديد على GitHub</li>
+                    <li>أنشئ مجلد باسم <code>reports</code></li>
+                    <li>أنشئ مجلد باسم <code>data</code></li>
+                    <li>انسخ رابط Raw للملفات في المستودع</li>
+                </ol>
+            </div>
+            
+            <button class="login-btn" onclick="saveGithubSetup()">💾 حفظ الإعدادات</button>
+            
+            <div id="githubSetupError" class="login-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- نافذة تحميل البيانات -->
+    <div id="dataLoadModal" class="login-modal">
+        <div class="login-content">
+            <div class="login-title">📂 تحميل البيانات الأساسية</div>
+            <p style="text-align: center; margin-bottom: 20px; color: #666; font-size: 12px;">
+                اختر طريقة تحميل البيانات الأساسية
+            </p>
+            
+            <button class="btn btn-computer" onclick="uploadFilesFromComputer()" style="margin-bottom: 10px;">
+                📁 رفع ملفات من الكمبيوتر
+            </button>
+            
+            <button class="btn btn-load" onclick="loadDataFromGithub()" style="margin-bottom: 10px;">
+                ☁️ تحميل من السحابة
+            </button>
+            
+            <button class="btn" onclick="closeDataLoadModal()" style="background: #666; color: white;">
+                ✖ إلغاء
+            </button>
+            
+            <div id="dataLoadError" class="login-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- نافذة تصدير Excel -->
+    <div id="exportModal" class="export-modal">
+        <div class="export-modal-content" style="width: 500px;">
+            <div class="export-modal-title">📊 تصدير التقارير إلى Excel</div>
+            
+            <div class="date-hint">
+                الرجاء إدخال التاريخ بالصيغة: <span class="date-example">يوم-شهر-سنة</span><br>
+                مثال: <span class="date-example">30-12-2025</span>
+            </div>
+            
+            <div class="export-date-range">
+                <div class="export-date-input">
+                    <label>📅 من تاريخ:</label>
+                    <input type="text" id="startDate" class="date-input-arabic" 
+                           placeholder="يوم-شهر-سنة" 
+                           pattern="\d{1,2}-\d{1,2}-\d{4}"
+                           title="الرجاء إدخال التاريخ بالصيغة: يوم-شهر-سنة (مثال: 30-12-2025)">
+                </div>
+                
+                <div class="export-date-input">
+                    <label>📅 إلى تاريخ:</label>
+                    <input type="text" id="endDate" class="date-input-arabic" 
+                           placeholder="يوم-شهر-سنة"
+                           pattern="\d{1,2}-\d{1,2}-\d{4}"
+                           title="الرجاء إدخال التاريخ بالصيغة: يوم-شهر-سنة (مثال: 30-12-2025)">
+                </div>
+            </div>
+            
+            <div id="exportPreview" class="export-preview-box">
+                اختر الفترة المطلوبة أولاً
+            </div>
+            
+            <div class="export-actions">
+                <button class="btn btn-export" onclick="searchReportsForExport()" style="flex: 2;">
+                    🔍 بحث عن التقارير
+                </button>
+                <button class="btn btn-save" onclick="exportToExcel()" style="flex: 2;">
+                    📥 تصدير إلى Excel
+                </button>
+                <button class="btn" onclick="closeExportModal()" style="flex: 1; background: #666;">
+                    ✖ إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- تحذير وقت الإغلاق -->
+    <div id="closingTimeWarning" class="closing-time-warning">
+        ⚠️ التقرير مغلق للقراءة فقط. يمكن للمدير فقط التعديل بعد الساعة 17:00.
+    </div>
+
+    <!-- عناصر التحكم -->
+    <div class="controls" id="controlsPanel" style="display: none;">
+        <button class="toggle-btn" onclick="toggleControls()">☰</button>
+        
+        <!-- معلومات المستخدم -->
+        <div class="user-info" id="userInfo" style="background: #e8f5e8; padding: 5px; border-radius: 3px; margin-bottom: 5px; text-align: center;">
+            <div id="currentUserName" style="font-weight: bold; color: #2e7d32;"></div>
+            <button class="btn" onclick="logout()" style="background: #666; margin-top: 2px; padding: 2px 5px; font-size: 12px;">🚪 تسجيل الخروج</button>
+        </div>
+        
+        <!-- GitHub Storage Section -->
+        <div class="github-storage">
+            <h4>☁️ التخزين السحابي (GitHub)</h4>
+            <div style="margin-bottom: 10px; padding: 5px; background: #fff; border-radius: 3px;">
+                <small id="githubStatus">🔄 جاري التحميل...</small>
+            </div>
+            
+            <button class="btn btn-save" onclick="saveReportToGitHub()" style="margin-bottom: 5px;">
+                💾 حفظ التقرير إلى السحابة
+            </button>
+            
+            <button class="btn btn-load" onclick="loadReportsFromGithub()" style="margin-bottom: 5px;">
+                📂 تحميل التقارير
+            </button>
+            
+            <button class="btn" onclick="openGithubSetup()" style="background: #795548; color: white; margin-top: 5px;">
+                ⚙️ إعدادات GitHub
+            </button>
+        </div>
+        
+        <!-- الأزرار الأساسية -->
+        <button class="btn" onclick="openDataLoadModal()" style="background: #009688; color: white; margin-top: 5px;">
+            📂 تحميل البيانات الأساسية
+        </button>
+        
+        <button class="btn btn-save" onclick="saveReportAsFile()" style="background: #9C27B0; color: white; margin-top: 5px;">
+            💾 حفظ التقرير كملف
+        </button>
+        
+        <button class="btn btn-export" onclick="openExportModal()" style="margin-top: 5px;">📊 تجميع وتصدير Excel</button>
+        
+        <button class="btn btn-load" onclick="importReportFromFile()" style="margin-top: 5px;">
+            📂 استيراد تقرير من ملف
+        </button>
+        
+        <!-- معلومات التقرير -->
+        <div class="file-info">
+            <strong>📋 التقرير الحالي:</strong><br>
+            رقم: <span id="currentReportNumber" class="report-number-auto">01</span><br>
+            التاريخ: <span id="currentReportDate"></span><br>
+            <small id="reportStatus" style="color: #4CAF50;"></small>
+        </div>
+    </div>
+
+    <!-- رسائل النظام -->
+    <div id="successMessage" class="system-message success-message"></div>
+    <div id="errorMessage" class="system-message error-message"></div>
+    <div id="infoMessage" class="system-message info-message"></div>
+    <div id="warningMessage" class="system-message warning-message"></div>
+    
+    <!-- مؤشر التحميل -->
+    <div id="loadingIndicator" class="loading-indicator">
+        <div class="loader"></div>
+        <div>جاري تحميل البيانات...</div>
+    </div>
+
+    <!-- عرض دور المستخدم -->
+    <div id="userRole" class="user-role" style="display: none;"></div>
+
+    <!-- الصفحة الأولى (الموظفين فقط) -->
+    <div class="page">
+        <div class="header-container">
+            <div class="ministry">وزارة التربية الوطنية</div>
+            <div class="directorate">مديرية التربية لولاية بسكرة</div>  
+            <div class="school-row">          
+                <div class="school-name">ثانوية: الشهيد محمد بوصبيعات المدعو بلقاضي- بسكرة.</div>
+                <div class="academic-year">الموسم الدراسي: 2026/2025.</div>
+            </div>
+        </div>
+        
+        <div class="report-info">
+            <div class="report-number">
+                رقم التقرير: 
+                <span class="report-number-auto" id="autoReportNumber">01</span>
+                /2026/2025
+                <input type="hidden" id="reportNumber" value="01">
+            </div>
+            <div class="report-date">
+                <div>
+                    ليوم: <input type="text" id="reportDay" style="width: 60px;" readonly>
+                </div>
+                <div>
+                    التاريخ: <input type="text" id="reportDate" style="width: 80px;" placeholder="DD/MM/YYYY">
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-title">تقرير المصلحة البيداغوجية</div>
+        
+        <div class="section-header">1- المواظبة:</div>
+        
+        <table class="attendance-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 20px;">الرقم</th>
+                    <th rowspan="2" style="width: 180px;">لقب و إسم الأستاذ</th>
+                    <th rowspan="2" style="width: 50px;">مادة التدريس</th>
+                    <th colspan="4">الفترة الصباحية</th>
+                    <th colspan="3">الفترة المسائية</th>
+                    <th rowspan="2" style="width: 100px;">مدة الغياب أو التأخر</th>
+                    <th rowspan="2" style="width: 120px;">سبب الغياب أو التأخر</th>
+                </tr>
+                <tr>
+                    <th><div class="period-header">08:00<br>09:00</div></th>
+                    <th><div class="period-header">09:00<br>09:55</div></th>
+                    <th><div class="period-header">10:05<br>11:00</div></th>
+                    <th><div class="period-header">11:00<br>12:00</div></th>
+                    <th><div class="period-header">13:30<br>14:30</div></th>
+                    <th><div class="period-header">14:30<br>15:30</div></th>
+                    <th><div class="period-header">15:30<br>16:30</div></th>
+                </tr>
+            </thead>
+            <tbody id="teachersTable"></tbody>
+        </table>
+        
+        <div class="sub-section-header">
+            <span>1-1- الإجراءات المتخذة:</span>
+            <span><input type="text" id="actionsTaken" style="width: 250px;" value="إستفسار الغائبين بدون مبرر والمتأخرين"></span>
+        </div>
+        
+        <div class="section-header students-absence-section">2- غيابات التلاميذ:</div>
+        
+        <div class="years-container">
+            <div style="flex: 2;">
+                <table class="compact-years-table" id="year3Table">
+                    <thead>
+                        <tr>
+                            <th colspan="12" style="padding: 0px;">السنة الثالثة ثانوي</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="1" style="width: 25px;"></th>
+                            <th style="width: 25px;">3 ت ر</th>
+                            <th style="width: 25px;">3 ت إ</th>
+                            <th style="width: 25px;">3 ريا</th>
+                            <th style="width: 25px;">3 ع 1</th>
+                            <th style="width: 25px;">3 ع 2</th>
+                            <th style="width: 25px;">3 ع 3</th>
+                            <th style="width: 25px;">3 آ 1</th>
+                            <th style="width: 25px;">3 آ 2</th>
+                            <th style="width: 25px;">3 لغ</th>
+                            <th rowspan="1" style="width: 25px;">مج</th>
+                        </tr>
+                        <tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>عدد المسجلين</td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 ت ر" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 ت إ" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 ريا" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 ع 1" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 ع 2" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 ع 3" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 آ 1" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 آ 2" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="3" data-class="3 لغ" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><strong id="totalRegistered3">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>عدد الغائبين</td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ت ر" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ت إ" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ريا" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ع 1" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ع 2" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ع 3" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 آ 1" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 آ 2" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 لغ" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><strong id="totalAbsent3">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>عدد المتأخرين</td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ت ر" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ت إ" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ريا" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ع 1" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ع 2" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 ع 3" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 آ 1" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 آ 2" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="3" data-class="3 لغ" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><strong id="totalLate3">0</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="compact-years-table" id="year2Table">
+                    <thead>
+                        <tr>
+                            <th colspan="12" style="padding: 0px;">السنة الثانية ثانوي</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="1" style="width: 25px;"></th>
+                            <th style="width: 25px;">2 ت ر</th>
+                            <th style="width: 25px;">2 ت إ</th>
+                            <th style="width: 25px;">2 ريا</th>
+                            <th style="width: 25px;">2 ع 1</th>
+                            <th style="width: 25px;">2 ع 2</th>
+                            <th style="width: 25px;">2 ع 3</th>
+                            <th style="width: 25px;">2 آ 1</th>
+                            <th style="width: 25px;">2 آ 2</th>
+                            <th style="width: 25px;">2 لغ</th>
+                            <th rowspan="1" style="width: 25px;">مج</th>
+                        </tr>
+                        <tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>عدد المسجلين</td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 ت ر" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 ت إ" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 ريا" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 ع 1" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 ع 2" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 ع 3" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 آ 1" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 آ 2" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="2" data-class="2 لغ" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><strong id="totalRegistered2">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>عدد الغائبين</td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ت ر" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ت إ" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ريا" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ع 1" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ع 2" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ع 3" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 آ 1" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 آ 2" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 لغ" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><strong id="totalAbsent2">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>عدد المتأخرين</td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ت ر" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ت إ" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ريا" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ع 1" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ع 2" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 ع 3" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 آ 1" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 آ 2" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="2" data-class="2 لغ" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><strong id="totalLate2">0</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="compact-years-table" id="year1Table">
+                    <thead>
+                        <tr>
+                            <th colspan="11" style="padding: 0px;">السنة الأولى ثانوي</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="1" style="width: 25px;"></th>
+                            <th style="width: 25px;">ج م ع 1</th>
+                            <th style="width: 25px;">ج م ع 2</th>
+                            <th style="width: 25px;">ج م ع 3</th>
+                            <th style="width: 25px;">ج م ع 4</th>
+                            <th style="width: 25px;">ج م ع 5</th>
+                            <th style="width: 25px;">ج م آ 1</th>
+                            <th style="width: 25px;">ج م آ 2</th>
+                            <th style="width: 25px;">ج م آ 3</th>
+                            <th rowspan="1" style="width: 25px;">مج</th>
+                        </tr>
+                        <tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>عدد المسجلين</td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م ع 1" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م ع 2" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م ع 3" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م ع 4" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م ع 5" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م آ 1" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م آ 2" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><input type="number" class="years-registered" data-year="1" data-class="ج م آ 3" placeholder="0" onchange="handleRegisteredChange(this)" title="عدد المسجلين في القسم"></td>
+                            <td><strong id="totalRegistered1">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>عدد الغائبين</td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 1" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 2" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 3" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 4" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 5" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م آ 1" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م آ 2" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م آ 3" data-type="absent" onchange="calculateAllTotals()"></td>
+                            <td><strong id="totalAbsent1">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>عدد المتأخرين</td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 1" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 2" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 3" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 4" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م ع 5" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م آ 1" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م آ 2" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><input type="number" value="0" class="years-input" data-year="1" data-class="ج م آ 3" data-type="late" onchange="calculateAllTotals()"></td>
+                            <td><strong id="totalLate1">0</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="side-tables">
+                <table class="compact-side-table" id="externalStudentsTable">
+                    <thead>
+                        <tr>
+                            <th colspan="5">تلاميذ النظام الخارجي</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>تلاميذ سنة 3</th>
+                            <th>تلاميذ سنة 2</th>
+                            <th>تلاميذ سنة 1</th>
+                            <th>مج</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>المسجلون</td>
+                            <td><strong id="externalRegistered3">0</strong></td>
+                            <td><strong id="externalRegistered2">0</strong></td>
+                            <td><strong id="externalRegistered1">0</strong></td>
+                            <td><strong id="externalRegisteredTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>الحاضرون</td>
+                            <td><strong id="externalPresent3">0</strong></td>
+                            <td><strong id="externalPresent2">0</strong></td>
+                            <td><strong id="externalPresent1">0</strong></td>
+                            <td><strong id="externalPresentTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>الغائبون</td>
+                            <td><strong id="externalAbsent3">0</strong></td>
+                            <td><strong id="externalAbsent2">0</strong></td>
+                            <td><strong id="externalAbsent1">0</strong></td>
+                            <td><strong id="externalAbsentTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>المتأخرون</td>
+                            <td><strong id="externalLate3">0</strong></td>
+                            <td><strong id="externalLate2">0</strong></td>
+                            <td><strong id="externalLate1">0</strong></td>
+                            <td><strong id="externalLateTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>النسبة %</td>
+                            <td><strong id="externalPercent3">0%</strong></td>
+                            <td><strong id="externalPercent2">0%</strong></td>
+                            <td><strong id="externalPercent1">0%</strong></td>
+                            <td><strong id="externalPercentTotal">0%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="compact-side-table" id="semiInternalStudentsTable">
+                    <thead>
+                        <tr>
+                            <th colspan="5">تلاميذ النظام نصف داخلي</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>تلاميذ سنة 3</th>
+                            <th>تلاميذ سنة 2</th>
+                            <th>تلاميذ سنة 1</th>
+                            <th>مج</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>المسجلون</td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="3" data-field="registered" onchange="calculateSemiInternal()"></td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="2" data-field="registered" onchange="calculateSemiInternal()"></td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="1" data-field="registered" onchange="calculateSemiInternal()"></td>
+                            <td><strong id="semiRegisteredTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>الحاضرون</td>
+                            <td><strong id="semiPresent3">0</strong></td>
+                            <td><strong id="semiPresent2">0</strong></td>
+                            <td><strong id="semiPresent1">0</strong></td>
+                            <td><strong id="semiPresentTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>الغائبون</td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="3" data-field="absent" onchange="calculateSemiInternal()"></td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="2" data-field="absent" onchange="calculateSemiInternal()"></td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="1" data-field="absent" onchange="calculateSemiInternal()"></td>
+                            <td><strong id="semiAbsentTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>المتأخرون</td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="3" data-field="late" onchange="calculateSemiInternal()"></td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="2" data-field="late" onchange="calculateSemiInternal()"></td>
+                            <td><input type="number" value="0" class="small-input" data-type="semi" data-year="1" data-field="late" onchange="calculateSemiInternal()"></td>
+                            <td><strong id="semiLateTotal">0</strong></td>
+                        </tr>
+                        <tr>
+                            <td>النسبة %</td>
+                            <td><strong id="semiPercent3">0%</strong></td>
+                            <td><strong id="semiPercent2">0%</strong></td>
+                            <td><strong id="semiPercent1">0%</strong></td>
+                            <td><strong id="semiPercentTotal">0%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="section-compact-title">
+            3- غيابات وتأخرات موظفي المصلحة البيداغوجية (الناظر، المشرف العام، مستشاري التوجيه، مشرفي التربية، مخبري، مكتبي والإداريون):
+        </div>
+        
+        <div class="row-tables-container">
+            <div class="employee-table-wrapper">
+                <table class="compact-staff-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px;">الرقم</th>
+                            <th style="width: 160px;">الإسم و اللقب</th>
+                            <th style="width: 30px;">الوظيفة</th>
+                            <th style="width: 120px;">مدة الغياب أو التأخر</th>
+                            <th style="width: 120px;">سبب الغياب أو التأخر</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffTable"></tbody>
+                </table>
+            </div>
+            
+            <div class="summary-table-wrapper">
+                <table class="small-table" id="educationalSummary">
+                    <thead>
+                        <tr>
+                            <th colspan="7">الحوصلة العامة للسلك التربوي</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>الأساتذة</th>
+                            <th>المشرف العام</th>
+                            <th>مشرفي التربية</th>
+                            <th>المخبري والمكتبي</th>
+                            <th>مستشار رئيسي للتوجيه</th>
+                            <th>مستشار التوجيه</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>المسجلون</td>
+                            <td>64</td>
+                            <td>1</td>
+                            <td>12</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>الغائبون</td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="teachers" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="supervisor" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="educators" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="lab" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="main_advisor" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="advisor" onchange="calculateEducationalSummary()"></td>
+                        </tr>
+                        <tr>
+                            <td>المتأخرون</td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="teachers" data-type="late" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="supervisor" data-type="late" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="educators" data-type="late" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="lab" data-type="late" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="main_advisor" data-type="late" onchange="calculateEducationalSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="advisor" data-type="late" onchange="calculateEducationalSummary()"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table class="small-table" id="administrativeSummary">
+                    <thead>
+                        <tr>
+                            <th colspan="7">الحوصلة العامة للسلك الإداري</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>المدير</th>
+                            <th>الناظر</th>
+                            <th>المقتصد</th>
+                            <th>نائب مقتصد</th>
+                            <th>أعوان الإدارة</th>
+                            <th>العمال</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>المسجلون</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>5</td> 
+                            <td>13</td>                       
+                        </tr>
+                        <tr>
+                            <td>الغائبون</td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="director" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="supervisor_admin" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="treasurer" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="deputy_treasurer" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="admin_staff" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="workers" onchange="calculateAdministrativeSummary()"></td>
+                        </tr>
+                        <tr>
+                            <td>المتأخرون</td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="director" data-type="late" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="supervisor_admin" data-type="late" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="treasurer" data-type="late" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="deputy_treasurer" data-type="late" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="admin_staff" data-type="late" onchange="calculateAdministrativeSummary()"></td>
+                            <td><input type="number" value="0" class="very-small-input" data-category="workers" data-type="late" onchange="calculateAdministrativeSummary()"></td>                        
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- الصفحة الثانية (ملاحظات المشرف والناظر + جدول التلاميذ الغائبين) -->
+    <div class="page absent-students-page">
+        <!-- ملاحظات المشرف العام والناظر في أعلى الصفحة -->
+        <div class="notes-and-absent-table-container">
+            <div class="notes-container" style="margin-bottom: 20px;">
+                <div class="notes-box notes-box-small">
+                    <div class="notes-title">ملاحظات المشرف العام:</div>
+                    <div class="notes-content">
+                        <div class="notes-item">
+                            <strong>1- المواظبة والإنضباط:</strong>
+                            <textarea placeholder="..."></textarea>
+                        </div>
+                        <div class="notes-item">
+                            <strong>2- الإتلافات:</strong>
+                            <textarea placeholder="..."></textarea>
+                        </div>
+                        <div class="notes-item">
+                            <strong>3- ملاحظات أخرى:</strong>
+                            <textarea placeholder="..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notes-box notes-box-small">
+                    <div class="notes-title">ملاحظات الناظر:</div>
+                    <div class="notes-content">
+                        <div class="notes-item">
+                            <strong>1- المكتبة:</strong>
+                            <textarea placeholder="..."></textarea>
+                        </div>
+                        <div class="notes-item">
+                            <strong>2- الأعمال التطبيقية في المخابر العلمية والإعلام الآلي:</strong>
+                            <textarea placeholder="..."></textarea>
+                        </div>
+                        <div class="notes-item">
+                            <strong>3- الندوات والتنسيق:</strong>
+                            <textarea placeholder="..."></textarea>
+                        </div>
+                        <div class="notes-item">
+                            <strong>4- ملاحظات أخرى:</strong>
+                            <textarea placeholder="..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- جدول التلاميذ الغائبين مباشرة بعد الملاحظات -->
+            <div class="absent-students-title">القائمة الإسمية للتلاميذ الغائبين لأكثر من ثلاثة أيام</div>
+            
+            <table class="absent-students-table" id="absentStudentsTable">
+                <thead>
+                    <tr>
+                        <th style="width: 20px;">الرقم</th>
+                        <th style="width: 170px;">لقب و اسم التلميذ</th>
+                        <th style="width: 80px;">القسم</th>
+                        <th style="width: 100px;">الإشعار الأول</th>
+                        <th style="width: 100px;">الإشعار الثاني</th>
+                        <th style="width: 100px;">الإعذار المضمون</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            
+            <!-- ملاحظات المدير والتوقيعات في أسفل الصفحة -->
+            <div class="director-notes">
+                <div class="director-notes-title">ملاحظات مدير المؤسسة:</div>
+                <div class="director-notes-box" id="directorNotes" contenteditable="true"></div>
+            </div>
+            
+            <div class="director-signature">
+                <div>حـــرر بــ بسكرة فـــي:</div>
+                <div style="margin-top: 15px;">
+                    <input type="text" id="absentReportDate" style="width: 120px; text-align: center; border-bottom: 1px solid #000; border-top: none; border-left: none; border-right: none; background: transparent; font-size: 12px;" placeholder="التاريخ" readonly>
+                </div>
+            </div>
+            
+            <div class="director-signature-line">
+                ختـــم و توقيـــع المديـــــــر
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== تعريف المتغيرات العالمية ==========
+        let teachersList = [];
+        let employeesList = [];
+        let classesList = [];
+        let classRegistrations = {};
+        let currentUser = null;
+        let selectedReports = [];
+        let isEditMode = false;
+        let isReportLocked = false;
+        let nextReportNumber = 1;
+        let githubRepoUrl = "";
+
+        const users = {
+            'supervisor': { password: 'admin123', role: 'المشرف العام', name: 'المشرف العام' },
+            'nazer': { password: 'admin1234', role: 'الناظر', name: 'الناظر' },
+            'director': { password: 'admin12345', role: 'مدير المؤسسة', name: 'مدير المؤسسة' }
+        };
+
+        const absenceReasons = [
+            "تأخر",
+            "بدون مبرر",
+            "شهادة طبية", 
+            "بمبرر",
+            "رخصة خروج إستثنائي",
+            "ندوة تربوية",
+            "عضو ترسيم",
+            "إضراب",
+            "أمر بمهمة"
+        ];
+
+        // ========== تهيئة الصفحة ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('تهيئة الصفحة...');
+            
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            const frenchDate = `${day}/${month}/${year}`;
+            
+            document.getElementById('reportDate').value = frenchDate;
+            document.getElementById('absentReportDate').value = frenchDate;
+            
+            setDayFromDate();
+            updateCurrentReportInfo();
+            
+            generateTeachersTable();
+            generateStaffTable();
+            generateAbsentStudentsTable();
+            
+            // تحميل رقم التقرير من السحابة
+            loadNextReportNumber();
+            
+            // التحقق من إعدادات GitHub
+            checkGithubSetup();
+            
+            // إظهار نافذة تسجيل الدخول
+            setTimeout(() => {
+                showLoginModal();
+            }, 500);
+            
+            document.getElementById('reportDate').addEventListener('change', function() {
+                setDayFromDate();
+                updateCurrentReportInfo();
+            });
+            
+            setupArabicDateInputs();
+            
+            setInterval(checkReportLockStatus, 60000);
+        });
+
+        // ========== التحقق من إعدادات GitHub ==========
+        function checkGithubSetup() {
+            const savedUrl = localStorage.getItem('githubRepoUrl');
+            if (savedUrl && savedUrl.trim() !== '') {
+                githubRepoUrl = savedUrl;
+                updateGithubStatus('✅ تم تحميل إعدادات GitHub');
+            } else {
+                setTimeout(() => {
+                    openGithubSetup();
+                }, 1000);
+            }
+        }
+
+        // ========== تحميل الرقم التسلسلي التالي من السحابة ==========
+        async function loadNextReportNumber() {
+            if (!githubRepoUrl) return;
+            
+            try {
+                const response = await fetch(`${githubRepoUrl}data/last_report.json`);
+                if (response.ok) {
+                    const data = await response.json();
+                    nextReportNumber = data.lastNumber + 1;
+                } else {
+                    nextReportNumber = 1;
+                }
+            } catch (error) {
+                console.log('استخدام رقم افتراضي:', error);
+                nextReportNumber = 1;
+            }
+            
+            const formattedNumber = nextReportNumber < 10 ? '0' + nextReportNumber : nextReportNumber.toString();
+            document.getElementById('autoReportNumber').textContent = formattedNumber;
+            document.getElementById('reportNumber').value = formattedNumber;
+        }
+
+        // ========== التحقق من حالة قفل التقرير ==========
+        function checkReportLockStatus() {
+            if (!currentUser) return;
+            
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            
+            const isAfter5PM = currentHour > 17 || (currentHour === 17 && currentMinute > 0);
+            
+            if (currentUser.username === 'director') {
+                isReportLocked = false;
+                document.getElementById('closingTimeWarning').classList.remove('show');
+                document.body.classList.remove('readonly-mode');
+            } else {
+                isReportLocked = isAfter5PM;
+                
+                if (isReportLocked) {
+                    document.getElementById('closingTimeWarning').classList.add('show');
+                    document.body.classList.add('readonly-mode');
+                    document.getElementById('reportStatus').textContent = 'مغلق للقراءة فقط';
+                    document.getElementById('reportStatus').style.color = '#f44336';
+                } else {
+                    document.getElementById('closingTimeWarning').classList.remove('show');
+                    document.body.classList.remove('readonly-mode');
+                    document.getElementById('reportStatus').textContent = 'مفتوح للتعديل';
+                    document.getElementById('reportStatus').style.color = '#4CAF50';
+                }
+            }
+            
+            updateFormAccess();
+        }
+
+        function updateFormAccess() {
+            const isDisabled = (currentUser.username !== 'director' && isReportLocked);
+            
+            const allInputs = document.querySelectorAll('input, select, textarea, [contenteditable="true"]');
+            allInputs.forEach(input => {
+                if (input.hasAttribute('data-always-enabled')) return;
+                
+                if (isDisabled) {
+                    input.setAttribute('readonly', 'true');
+                    input.setAttribute('disabled', 'true');
+                    input.style.backgroundColor = '#f5f5f5';
+                    input.style.cursor = 'not-allowed';
+                } else {
+                    input.removeAttribute('readonly');
+                    input.removeAttribute('disabled');
+                    input.style.backgroundColor = '';
+                    input.style.cursor = '';
+                }
+            });
+            
+            const saveBtn = document.querySelector('.btn-save');
+            if (saveBtn) {
+                if (isDisabled) {
+                    saveBtn.disabled = true;
+                    saveBtn.style.opacity = '0.5';
+                    saveBtn.style.cursor = 'not-allowed';
+                    saveBtn.title = 'التقرير مغلق للقراءة فقط';
+                } else {
+                    saveBtn.disabled = false;
+                    saveBtn.style.opacity = '1';
+                    saveBtn.style.cursor = 'pointer';
+                    saveBtn.title = 'حفظ التقرير';
+                }
+            }
+        }
+
+        // ========== وظائف تسجيل الدخول ==========
+        function showLoginModal() {
+            console.log('عرض نافذة تسجيل الدخول');
+            document.getElementById('loginModal').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('محاولة تسجيل الدخول:', username);
+            
+            if (users[username] && users[username].password === password) {
+                currentUser = {
+                    username: username,
+                    role: users[username].role,
+                    name: users[username].name
+                };
+                
+                showMainInterface();
+                hideLoginModal();
+                showMessage('success', `مرحباً ${currentUser.name}`);
+                
+                setTimeout(() => {
+                    checkReportLockStatus();
+                }, 1000);
+                
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                currentUser = null;
+                showLoginModal();
+                document.getElementById('controlsPanel').style.display = 'none';
+                document.getElementById('userInfo').style.display = 'none';
+                document.getElementById('userRole').style.display = 'none';
+            }
+        }
+
+        function showMainInterface() {
+            if (!currentUser) return;
+            
+            console.log('عرض الواجهة الرئيسية للمستخدم:', currentUser.name);
+            
+            document.getElementById('currentUserName').textContent = `👤 ${currentUser.name}`;
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('userRole').textContent = currentUser.name;
+            document.getElementById('userRole').style.display = 'block';
+            document.getElementById('controlsPanel').style.display = 'block';
+            
+            calculateAllTotals();
+            calculateSemiInternal();
+            checkReportLockStatus();
+            
+            // محاولة تحميل البيانات من السحابة
+            setTimeout(() => {
+                loadDataFromGithub();
+            }, 1000);
+        }
+
+        // ========== تحديث معلومات التقرير ==========
+        function updateCurrentReportInfo() {
+            const reportNumber = document.getElementById('autoReportNumber').textContent || '01';
+            const reportDate = document.getElementById('reportDate').value || 'DD/MM/YYYY';
+            
+            document.getElementById('currentReportNumber').textContent = reportNumber;
+            document.getElementById('currentReportDate').textContent = reportDate;
+        }
+
+        function setDayFromDate() {
+            const dateInput = document.getElementById('reportDate').value;
+            if (dateInput) {
+                const [day, month, year] = dateInput.split('/').map(Number);
+                const date = new Date(year, month - 1, day);
+                const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                const dayName = days[date.getDay()];
+                document.getElementById('reportDay').value = dayName;
+            }
+        }
+
+        // ========== إنشاء الجداول ==========
+        function generateTeachersTable() {
+            console.log('إنشاء جدول الأساتذة...');
+            const tableBody = document.getElementById('teachersTable');
+            tableBody.innerHTML = '';
+            
+            for (let i = 1; i <= 16; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td><input type="text" class="teacher-name autocomplete" placeholder="لقب و إسم الأستاذ" style="text-align: right;" data-type="teacher"></td>
+                    <td><input type="text" class="teacher-subject" placeholder="مادة التدريس" style="text-align: right;"></td>
+                    <td><select class="period-class" data-period="1"><option value=""></option></select></td>
+                    <td><select class="period-class" data-period="2"><option value=""></option></select></td>
+                    <td><select class="period-class" data-period="3"><option value=""></option></select></td>
+                    <td><select class="period-class" data-period="4"><option value=""></option></select></td>
+                    <td><select class="period-class" data-period="5"><option value=""></option></select></td>
+                    <td><select class="period-class" data-period="6"><option value=""></option></select></td>
+                    <td><select class="period-class" data-period="7"><option value=""></option></select></td>
+                    <td><input type="text" class="absence-duration" placeholder="المدة" style="text-align: center; width: 80px;"></td>
+                    <td>
+                        <select class="absence-reason" style="width: 100%; height: 16px; font-size: 12px;">
+                            <option value="">اختر السبب</option>
+                            ${absenceReasons.map(reason => `<option value="${reason}">${reason}</option>`).join('')}
+                        </select>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // إضافة مستمعات الأحداث للإكمال التلقائي
+            initializeAutocomplete();
+        }
+
+        function generateStaffTable() {
+            console.log('إنشاء جدول الموظفين...');
+            const tableBody = document.getElementById('staffTable');
+            tableBody.innerHTML = '';
+            
+            for (let i = 1; i <= 11; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td><input type="text" class="employee-name autocomplete" placeholder="الإسم و اللقب" style="text-align: right;" data-type="employee"></td>
+                    <td><input type="text" class="employee-position" placeholder="الوظيفة" style="text-align: right;"></td>
+                    <td><input type="text" class="employee-duration" placeholder="المدة" style="text-align: center;"></td>
+                    <td>
+                        <select class="employee-reason" style="width: 100%; height: 16px; font-size: 12px;">
+                            <option value="">اختر السبب</option>
+                            ${absenceReasons.map(reason => `<option value="${reason}">${reason}</option>`).join('')}
+                        </select>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // إضافة مستمعات الأحداث للإكمال التلقائي
+            initializeAutocomplete();
+        }
+
+        function generateAbsentStudentsTable() {
+            console.log('إنشاء جدول التلاميذ الغائبين...');
+            const tableBody = document.querySelector('#absentStudentsTable tbody');
+            tableBody.innerHTML = '';
+            
+            for (let i = 1; i <= 22; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td><input type="text" class="absent-student-input student-name" placeholder="لقب و اسم التلميذ"></td>
+                    <td><select class="absent-student-class"><option value=""></option></select></td>
+                    <td><input type="text" class="absent-student-input correspondence correspondence-1" placeholder="الإشعار الأول"></td>
+                    <td><input type="text" class="absent-student-input correspondence correspondence-2" placeholder="الإشعار الثاني"></td>
+                    <td><input type="text" class="absent-student-input correspondence correspondence-3" placeholder="الإعذار المضمون"></td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        function updateClassOptions() {
+            const classSelects = document.querySelectorAll('.period-class, .absent-student-class');
+            classSelects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value=""></option>';
+                
+                classesList.forEach(className => {
+                    const option = document.createElement('option');
+                    option.value = className;
+                    option.textContent = className;
+                    select.appendChild(option);
+                });
+                
+                if (classesList.includes(currentValue)) {
+                    select.value = currentValue;
+                }
+            });
+        }
+
+        // ========== حفظ التقرير إلى السحابة ==========
+        async function saveReportToGitHub() {
+            if (!currentUser) {
+                showMessage('error', 'الرجاء تسجيل الدخول أولاً');
+                return;
+            }
+            
+            if (currentUser.username !== 'director' && isReportLocked) {
+                showMessage('error', 'التقرير مغلق للقراءة فقط. يمكن للمدير فقط التعديل بعد الساعة 17:00');
+                return;
+            }
+            
+            if (!githubRepoUrl) {
+                showMessage('error', 'الرجاء إعداد رابط GitHub أولاً');
+                openGithubSetup();
+                return;
+            }
+            
+            const reportData = collectReportData();
+            
+            if (!reportData.reportNumber || !reportData.reportDate) {
+                showMessage('error', 'الرجاء تعبئة رقم التقرير والتاريخ');
+                return;
+            }
+            
+            showLoadingIndicator(true);
+            showMessage('info', 'جاري حفظ التقرير إلى السحابة...');
+            
+            try {
+                // إنشاء JSON للتقرير
+                const dataStr = JSON.stringify(reportData, null, 2);
+                const reportFileName = `تقرير_${reportData.reportNumber}.json`;
+                
+                // عرض البيانات للمستخدم للنسخ
+                showMessage('success', `
+                    📋 **نسخ البيانات لـ GitHub:**
+                    <br><br>
+                    1. اذهب إلى GitHub
+                    <br>
+                    2. افتح مجلد: <strong>reports</strong>
+                    <br>
+                    3. أنشئ ملف: <strong>${reportFileName}</strong>
+                    <br>
+                    4. الصق المحتوى التالي:
+                `);
+                
+                // عرض محرر للنسخ
+                setTimeout(() => {
+                    const editor = document.createElement('div');
+                    editor.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+                        z-index: 4000;
+                        width: 90%;
+                        height: 80%;
+                        overflow: hidden;
+                        display: flex;
+                        flex-direction: column;
+                    `;
+                    
+                    editor.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">
+                            <h3 style="color: #4CAF50; margin: 0;">📋 نسخ البيانات لـ GitHub</h3>
+                            <button onclick="this.parentElement.parentElement.remove()" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">✖ إغلاق</button>
+                        </div>
+                        
+                        <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column;">
+                            <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 12px;">
+                                <strong>📝 التعليمات:</strong>
+                                <ol style="margin: 5px 0; padding-right: 20px;">
+                                    <li>انسخ النص كاملاً من المربع أدناه</li>
+                                    <li>اذهب إلى GitHub في نافذة جديدة</li>
+                                    <li>أنشئ ملف جديد في مجلد <code>reports</code></li>
+                                    <li>الصق المحتوى واحفظ الملف</li>
+                                </ol>
+                            </div>
+                            
+                            <textarea id="githubDataEditor" style="flex: 1; width: 100%; padding: 15px; font-family: 'Courier New', monospace; font-size: 12px; border: 2px solid #4CAF50; border-radius: 5px; resize: none;">${dataStr}</textarea>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                <button onclick="copyGithubData()" style="flex: 2; background: #4CAF50; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    📋 نسخ البيانات إلى الحافظة
+                                </button>
+                                <button onclick="this.parentElement.parentElement.parentElement.remove()" style="flex: 1; background: #666; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer;">
+                                    ✖ إغلاق
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(editor);
+                }, 1000);
+                
+                // تحديث رقم التقرير التالي
+                await updateLastReportNumber(reportData.reportNumber);
+                
+                showLoadingIndicator(false);
+                
+                // مسح التقرير الحالي
+                clearCurrentReport();
+                
+            } catch (error) {
+                showLoadingIndicator(false);
+                showMessage('error', 'حدث خطأ أثناء الحفظ: ' + error.message);
+            }
+        }
+
+        async function updateLastReportNumber(reportNumber) {
+            if (!githubRepoUrl) return;
+            
+            try {
+                const number = parseInt(reportNumber);
+                const data = { lastNumber: number };
+                const dataStr = JSON.stringify(data, null, 2);
+                
+                showMessage('info', '📝 قم بتحديث ملف last_report.json في GitHub');
+                
+                // عرض محرر لملف last_report.json
+                setTimeout(() => {
+                    const editor = document.createElement('div');
+                    editor.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+                        z-index: 4001;
+                        width: 80%;
+                        height: 60%;
+                        overflow: hidden;
+                        display: flex;
+                        flex-direction: column;
+                    `;
+                    
+                    editor.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #FF9800; padding-bottom: 10px;">
+                            <h3 style="color: #FF9800; margin: 0;">📝 تحديث رقم التقرير التالي</h3>
+                            <button onclick="this.parentElement.parentElement.remove()" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">✖ إغلاق</button>
+                        </div>
+                        
+                        <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column;">
+                            <div style="background: #fff8e1; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 12px;">
+                                <strong>⚠️ مهم:</strong> قم بتحديث ملف <code>data/last_report.json</code> في GitHub بهذه البيانات:
+                            </div>
+                            
+                            <textarea id="lastNumberEditor" style="flex: 1; width: 100%; padding: 15px; font-family: 'Courier New', monospace; font-size: 12px; border: 2px solid #FF9800; border-radius: 5px; resize: none;">${dataStr}</textarea>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                <button onclick="copyLastNumberData()" style="flex: 2; background: #FF9800; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                    📋 نسخ البيانات إلى الحافظة
+                                </button>
+                                <button onclick="this.parentElement.parentElement.parentElement.remove()" style="flex: 1; background: #666; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer;">
+                                    ✖ إغلاق
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(editor);
+                }, 1500);
+                
+            } catch (error) {
+                console.error('خطأ في تحديث رقم التقرير:', error);
+            }
+        }
+
+        function copyGithubData() {
+            const textarea = document.getElementById('githubDataEditor');
+            if (textarea) {
+                textarea.select();
+                document.execCommand('copy');
+                showMessage('success', 'تم نسخ البيانات إلى الحافظة ✓');
+            }
+        }
+
+        function copyLastNumberData() {
+            const textarea = document.getElementById('lastNumberEditor');
+            if (textarea) {
+                textarea.select();
+                document.execCommand('copy');
+                showMessage('success', 'تم نسخ بيانات رقم التقرير إلى الحافظة ✓');
+            }
+        }
+
+        // ========== جمع بيانات التقرير ==========
+        function collectReportData() {
+            const data = {
+                reportNumber: document.getElementById('reportNumber').value,
+                reportDate: document.getElementById('reportDate').value,
+                reportDay: document.getElementById('reportDay').value,
+                actionsTaken: document.getElementById('actionsTaken').value,
+                timestamp: new Date().toISOString(),
+                savedBy: currentUser.name,
+                savedAt: new Date().toISOString(),
+                classRegistrations: {...classRegistrations},
+                classesList: [...classesList]
+            };
+            
+            const teachers = [];
+            document.querySelectorAll('#teachersTable tr').forEach((row, index) => {
+                const nameInput = row.querySelector('.teacher-name');
+                const subjectInput = row.querySelector('.teacher-subject');
+                const reasonInput = row.querySelector('.absence-reason');
+                
+                if (nameInput && nameInput.value.trim()) {
+                    const teacher = {
+                        id: index + 1,
+                        name: nameInput.value.trim(),
+                        subject: subjectInput ? subjectInput.value.trim() : '',
+                        reason: reasonInput ? reasonInput.value.trim() : '',
+                        periods: []
+                    };
+                    
+                    row.querySelectorAll('.period-class').forEach((select, periodIndex) => {
+                        if (select && select.value) {
+                            teacher.periods.push({
+                                period: periodIndex + 1,
+                                class: select.value
+                            });
+                        }
+                    });
+                    
+                    teachers.push(teacher);
+                }
+            });
+            data.teachers = teachers;
+            
+            const staff = [];
+            document.querySelectorAll('#staffTable tr').forEach((row, index) => {
+                const nameInput = row.querySelector('.employee-name');
+                const positionInput = row.querySelector('.employee-position');
+                const durationInput = row.querySelector('.employee-duration');
+                const reasonInput = row.querySelector('.employee-reason');
+                
+                if (nameInput && nameInput.value.trim()) {
+                    staff.push({
+                        id: index + 1,
+                        name: nameInput.value.trim(),
+                        position: positionInput ? positionInput.value.trim() : '',
+                        duration: durationInput ? durationInput.value.trim() : '',
+                        reason: reasonInput ? reasonInput.value.trim() : ''
+                    });
+                }
+            });
+            data.staff = staff;
+            
+            data.yearsData = {
+                year1: collectYearDataForSave(1),
+                year2: collectYearDataForSave(2),
+                year3: collectYearDataForSave(3)
+            };
+            
+            data.semiInternalData = {
+                year1: {
+                    registered: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="1"][data-field="registered"]')?.value) || 0,
+                    absent: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="1"][data-field="absent"]')?.value) || 0,
+                    late: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="1"][data-field="late"]')?.value) || 0,
+                    present: parseInt(document.getElementById('semiPresent1')?.textContent) || 0,
+                    percent: document.getElementById('semiPercent1')?.textContent || '0%'
+                },
+                year2: {
+                    registered: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="2"][data-field="registered"]')?.value) || 0,
+                    absent: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="2"][data-field="absent"]')?.value) || 0,
+                    late: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="2"][data-field="late"]')?.value) || 0,
+                    present: parseInt(document.getElementById('semiPresent2')?.textContent) || 0,
+                    percent: document.getElementById('semiPercent2')?.textContent || '0%'
+                },
+                year3: {
+                    registered: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="3"][data-field="registered"]')?.value) || 0,
+                    absent: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="3"][data-field="absent"]')?.value) || 0,
+                    late: parseInt(document.querySelector('.small-input[data-type="semi"][data-year="3"][data-field="late"]')?.value) || 0,
+                    present: parseInt(document.getElementById('semiPresent3')?.textContent) || 0,
+                    percent: document.getElementById('semiPercent3')?.textContent || '0%'
+                }
+            };
+            
+            const absentStudents = [];
+            document.querySelectorAll('#absentStudentsTable tbody tr').forEach((row, index) => {
+                const nameInput = row.querySelector('.student-name');
+                const classInput = row.querySelector('.absent-student-class');
+                const notice1Input = row.querySelector('.correspondence-1');
+                const notice2Input = row.querySelector('.correspondence-2');
+                const notice3Input = row.querySelector('.correspondence-3');
+                
+                if (nameInput && nameInput.value.trim()) {
+                    const student = {
+                        id: index + 1,
+                        name: nameInput.value.trim(),
+                        class: classInput ? classInput.value : '',
+                        notice1: notice1Input ? notice1Input.value.trim() : '',
+                        notice2: notice2Input ? notice2Input.value.trim() : '',
+                        notice3: notice3Input ? notice3Input.value.trim() : ''
+                    };
+                    absentStudents.push(student);
+                }
+            });
+            data.absentStudents = absentStudents;
+            
+            data.notes = {
+                supervisor: collectSupervisorNotes(),
+                supervisor_admin: collectSupervisorAdminNotes(),
+                director: document.getElementById('directorNotes')?.innerHTML || ''
+            };
+            
+            data.educationalSummary = collectEducationalSummary();
+            data.administrativeSummary = collectAdministrativeSummary();
+            
+            return data;
+        }
+
+        function collectYearDataForSave(year) {
+            const data = {
+                registered: [],
+                absent: [],
+                late: []
+            };
+            
+            document.querySelectorAll(`.years-registered[data-year="${year}"]`).forEach(input => {
+                data.registered.push(parseInt(input.value) || 0);
+            });
+            
+            document.querySelectorAll(`.years-input[data-year="${year}"][data-type="absent"]`).forEach(input => {
+                data.absent.push(parseInt(input.value) || 0);
+            });
+            
+            document.querySelectorAll(`.years-input[data-year="${year}"][data-type="late"]`).forEach(input => {
+                data.late.push(parseInt(input.value) || 0);
+            });
+            
+            return data;
+        }
+
+        function collectSupervisorNotes() {
+            const notes = {};
+            const container = document.querySelector('.notes-box-small:first-child .notes-content');
+            if (container) {
+                container.querySelectorAll('textarea').forEach((textarea, index) => {
+                    notes[`note${index + 1}`] = textarea.value || '';
+                });
+            }
+            return notes;
+        }
+
+        function collectSupervisorAdminNotes() {
+            const notes = {};
+            const container = document.querySelector('.notes-box-small:last-child .notes-content');
+            if (container) {
+                container.querySelectorAll('textarea').forEach((textarea, index) => {
+                    notes[`note${index + 1}`] = textarea.value || '';
+                });
+            }
+            return notes;
+        }
+
+        function collectEducationalSummary() {
+            const summary = {};
+            const categories = ['teachers', 'supervisor', 'educators', 'lab', 'main_advisor', 'advisor'];
+            
+            categories.forEach(category => {
+                const absentInput = document.querySelector(`.very-small-input[data-category="${category}"]`);
+                const lateInput = document.querySelector(`.very-small-input[data-category="${category}"][data-type="late"]`);
+                
+                summary[category] = {
+                    absent: parseInt(absentInput?.value) || 0,
+                    late: parseInt(lateInput?.value) || 0
+                };
+            });
+            
+            return summary;
+        }
+
+        function collectAdministrativeSummary() {
+            const summary = {};
+            const categories = ['director', 'supervisor_admin', 'treasurer', 'deputy_treasurer', 'admin_staff', 'workers'];
+            
+            categories.forEach(category => {
+                const absentInput = document.querySelector(`.very-small-input[data-category="${category}"]`);
+                const lateInput = document.querySelector(`.very-small-input[data-category="${category}"][data-type="late"]`);
+                
+                summary[category] = {
+                    absent: parseInt(absentInput?.value) || 0,
+                    late: parseInt(lateInput?.value) || 0
+                };
+            });
+            
+            return summary;
+        }
+
+        function clearCurrentReport() {
+            document.querySelectorAll('#teachersTable input, #teachersTable select').forEach(field => {
+                if (field.tagName === 'SELECT') {
+                    field.value = '';
+                } else if (field.tagName === 'INPUT') {
+                    field.value = '';
+                }
+            });
+            
+            document.querySelectorAll('#staffTable input, #staffTable select').forEach(field => {
+                if (field.tagName === 'SELECT') {
+                    field.value = '';
+                } else if (field.tagName === 'INPUT') {
+                    field.value = '';
+                }
+            });
+            
+            document.querySelectorAll('#absentStudentsTable input, #absentStudentsTable select').forEach(field => {
+                if (field.tagName === 'SELECT') {
+                    field.value = '';
+                } else if (field.tagName === 'INPUT') {
+                    field.value = '';
+                }
+            });
+            
+            document.querySelectorAll('textarea').forEach(textarea => {
+                textarea.value = '';
+            });
+            
+            document.getElementById('directorNotes').innerHTML = '';
+            
+            document.querySelectorAll('.years-input[data-type="absent"], .years-input[data-type="late"]').forEach(input => {
+                input.value = '0';
+            });
+            
+            document.querySelectorAll('.small-input[data-type="semi"]').forEach(input => {
+                input.value = '0';
+            });
+            
+            document.querySelectorAll('.very-small-input').forEach(input => {
+                input.value = '0';
+            });
+            
+            calculateAllTotals();
+            calculateSemiInternal();
+            calculateEducationalSummary();
+            calculateAdministrativeSummary();
+            
+            // تحديث رقم التقرير
+            nextReportNumber++;
+            const formattedNumber = nextReportNumber < 10 ? '0' + nextReportNumber : nextReportNumber.toString();
+            document.getElementById('autoReportNumber').textContent = formattedNumber;
+            document.getElementById('reportNumber').value = formattedNumber;
+            
+            updateCurrentReportInfo();
+        }
+
+        // ========== إعدادات GitHub ==========
+        function openGithubSetup() {
+            document.getElementById('githubSetupModal').style.display = 'flex';
+            document.getElementById('setupGithubUrl').value = githubRepoUrl || '';
+            document.getElementById('githubSetupError').style.display = 'none';
+        }
+
+        function closeGithubSetup() {
+            document.getElementById('githubSetupModal').style.display = 'none';
+        }
+
+        function saveGithubSetup() {
+            const url = document.getElementById('setupGithubUrl').value.trim();
+            
+            if (!url) {
+                document.getElementById('githubSetupError').textContent = 'الرجاء إدخال رابط GitHub';
+                document.getElementById('githubSetupError').style.display = 'block';
+                return;
+            }
+            
+            if (!url.startsWith('https://raw.githubusercontent.com/')) {
+                document.getElementById('githubSetupError').textContent = 'الرجاء إدخال رابط Raw الصحيح من GitHub';
+                document.getElementById('githubSetupError').style.display = 'block';
+                return;
+            }
+            
+            githubRepoUrl = url.endsWith('/') ? url : url + '/';
+            localStorage.setItem('githubRepoUrl', githubRepoUrl);
+            
+            updateGithubStatus('✅ تم حفظ إعدادات GitHub');
+            closeGithubSetup();
+            
+            showMessage('success', 'تم حفظ إعدادات GitHub بنجاح ✓');
+            
+            // محاولة تحميل البيانات من السحابة
+            setTimeout(() => {
+                loadDataFromGithub();
+                loadNextReportNumber();
+            }, 1000);
+        }
+
+        function updateGithubStatus(message) {
+            const statusElement = document.getElementById('githubStatus');
+            if (statusElement) {
+                statusElement.textContent = message;
+                statusElement.style.color = message.includes('✅') ? '#2e7d32' : 
+                                          message.includes('❌') ? '#f44336' : 
+                                          message.includes('⚠️') ? '#ff9800' : '#666';
+            }
+        }
+
+        // ========== تحميل البيانات من السحابة ==========
+        async function loadDataFromGithub() {
+            if (!githubRepoUrl) {
+                showMessage('error', 'الرجاء إعداد رابط GitHub أولاً');
+                openGithubSetup();
+                return;
+            }
+            
+            showLoadingIndicator(true);
+            updateGithubStatus('🔄 جاري تحميل البيانات من السحابة...');
+            
+            try {
+                // تحميل بيانات الأساتذة
+                const teachersResponse = await fetch(`${githubRepoUrl}data/teachers.json`);
+                if (teachersResponse.ok) {
+                    teachersList = await teachersResponse.json();
+                    console.log('تم تحميل الأساتذة:', teachersList.length);
+                }
+                
+                // تحميل بيانات الموظفين
+                const employeesResponse = await fetch(`${githubRepoUrl}data/employees.json`);
+                if (employeesResponse.ok) {
+                    employeesList = await employeesResponse.json();
+                    console.log('تم تحميل الموظفين:', employeesList.length);
+                }
+                
+                // تحميل بيانات الأقسام
+                const classesResponse = await fetch(`${githubRepoUrl}data/classes.json`);
+                if (classesResponse.ok) {
+                    const classesData = await classesResponse.json();
+                    classesList = classesData.classes || [];
+                    classRegistrations = classesData.registrations || {};
+                    
+                    // تعبئة حقول عدد المسجلين
+                    updateRegisteredFieldsFromStorage();
+                    console.log('تم تحميل الأقسام:', classesList.length);
+                }
+                
+                showLoadingIndicator(false);
+                
+                if (teachersList.length > 0 || employeesList.length > 0 || classesList.length > 0) {
+                    initializeAutocomplete();
+                    updateClassOptions();
+                    updateAbsentStudentClassSelects();
+                    
+                    updateGithubStatus(`✅ تم تحميل ${teachersList.length} أستاذ، ${employeesList.length} موظف، ${classesList.length} قسم`);
+                    showMessage('success', 'تم تحميل البيانات الأساسية من السحابة بنجاح ✓');
+                } else {
+                    updateGithubStatus('⚠️ لم يتم العثور على بيانات في السحابة');
+                    showMessage('warning', 'لم يتم العثور على بيانات في السحابة. يمكنك رفع الملفات يدوياً.');
+                }
+                
+            } catch (error) {
+                showLoadingIndicator(false);
+                updateGithubStatus('❌ فشل في تحميل البيانات');
+                showMessage('error', 'حدث خطأ في تحميل البيانات: ' + error.message);
+            }
+        }
+
+        function updateRegisteredFieldsFromStorage() {
+            document.querySelectorAll('.years-registered').forEach(input => {
+                const className = input.dataset.class;
+                if (classRegistrations[className]) {
+                    input.value = classRegistrations[className];
+                }
+            });
+            calculateAllTotals();
+        }
+
+        // ========== تحميل التقارير من السحابة ==========
+        async function loadReportsFromGithub() {
+            if (!githubRepoUrl) {
+                showMessage('error', 'الرجاء إعداد رابط GitHub أولاً');
+                openGithubSetup();
+                return;
+            }
+            
+            showLoadingIndicator(true);
+            
+            try {
+                // محاولة تحميل فهرس التقارير
+                const response = await fetch(`${githubRepoUrl}reports/index.json`);
+                
+                if (!response.ok) {
+                    throw new Error('لم يتم العثور على فهرس التقارير');
+                }
+                
+                const reportsList = await response.json();
+                
+                showLoadingIndicator(false);
+                
+                // عرض قائمة التقارير للمستخدم
+                showReportsList(reportsList);
+                
+            } catch (error) {
+                showLoadingIndicator(false);
+                showMessage('error', 'حدث خطأ في تحميل التقارير: ' + error.message);
+            }
+        }
+
+        function showReportsList(reportsList) {
+            let reportsHtml = `
+                <div style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+                    <h3 style="color: #4CAF50; text-align: center; margin-bottom: 15px;">📋 التقارير المتاحة</h3>
+            `;
+            
+            if (reportsList.length === 0) {
+                reportsHtml += `
+                    <div style="text-align: center; padding: 30px; color: #666;">
+                        📭 لا توجد تقارير محفوظة
+                    </div>
+                `;
+            } else {
+                reportsList.forEach(report => {
+                    reportsHtml += `
+                        <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 8px; border-radius: 5px; cursor: pointer; transition: all 0.3s;"
+                             onclick="loadReportFromGithub('${report.file}')"
+                             onmouseover="this.style.backgroundColor='#f0f8ff'; this.style.borderColor='#4CAF50';"
+                             onmouseout="this.style.backgroundColor=''; this.style.borderColor='#ddd';">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: #2e7d32;">التقرير رقم: ${report.number}</strong><br>
+                                    <small>التاريخ: ${report.date} | محفوظ بواسطة: ${report.savedBy}</small>
+                                </div>
+                                <div style="color: #4CAF50; font-size: 20px;">📄</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            reportsHtml += '</div>';
+            
+            const reportsDiv = document.createElement('div');
+            reportsDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 25px;
+                border-radius: 10px;
+                box-shadow: 0 0 30px rgba(0,0,0,0.2);
+                z-index: 4000;
+                width: 500px;
+                max-height: 80%;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            `;
+            
+            reportsDiv.innerHTML = reportsHtml + `
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button onclick="this.parentElement.parentElement.remove()" style="flex: 1; background: #666; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer;">
+                        ✖ إغلاق
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(reportsDiv);
+        }
+
+        async function loadReportFromGithub(fileName) {
+            if (!githubRepoUrl) return;
+            
+            showLoadingIndicator(true);
+            
+            try {
+                const response = await fetch(`${githubRepoUrl}reports/${fileName}`);
+                
+                if (!response.ok) {
+                    throw new Error('التقرير غير موجود');
+                }
+                
+                const reportData = await response.json();
+                loadReportIntoForm(reportData);
+                
+                showLoadingIndicator(false);
+                showMessage('success', `تم تحميل التقرير رقم ${reportData.reportNumber} بنجاح`);
+                
+                // إغلاق نافذة التقارير
+                const reportsDiv = document.querySelector('div[style*="position: fixed; top: 50%;"]');
+                if (reportsDiv) {
+                    reportsDiv.remove();
+                }
+                
+            } catch (error) {
+                showLoadingIndicator(false);
+                showMessage('error', 'حدث خطأ في تحميل التقرير: ' + error.message);
+            }
+        }
+
+        function loadReportIntoForm(reportData) {
+            console.log('تحميل التقرير إلى النموذج:', reportData.reportNumber);
+            
+            document.getElementById('reportNumber').value = reportData.reportNumber;
+            document.getElementById('autoReportNumber').textContent = reportData.reportNumber;
+            document.getElementById('reportDate').value = reportData.reportDate;
+            document.getElementById('reportDay').value = reportData.reportDay || '';
+            document.getElementById('actionsTaken').value = reportData.actionsTaken || '';
+            document.getElementById('absentReportDate').value = reportData.reportDate;
+            
+            updateCurrentReportInfo();
+            
+            if (reportData.classRegistrations) {
+                Object.assign(classRegistrations, reportData.classRegistrations);
+                updateRegisteredFieldsFromStorage();
+            }
+            
+            if (reportData.teachers && reportData.teachers.length > 0) {
+                const rows = document.querySelectorAll('#teachersTable tr');
+                
+                reportData.teachers.forEach((teacher, index) => {
+                    if (index < rows.length) {
+                        const row = rows[index];
+                        row.querySelector('.teacher-name').value = teacher.name || '';
+                        row.querySelector('.teacher-subject').value = teacher.subject || '';
+                        row.querySelector('.absence-reason').value = teacher.reason || '';
+                        
+                        if (teacher.periods) {
+                            teacher.periods.forEach(period => {
+                                const select = row.querySelector(`.period-class[data-period="${period.period}"]`);
+                                if (select) {
+                                    select.value = period.class || '';
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+            
+            if (reportData.staff && reportData.staff.length > 0) {
+                const rows = document.querySelectorAll('#staffTable tr');
+                
+                reportData.staff.forEach((staff, index) => {
+                    if (index < rows.length) {
+                        const row = rows[index];
+                        row.querySelector('.employee-name').value = staff.name || '';
+                        row.querySelector('.employee-position').value = staff.position || '';
+                        row.querySelector('.employee-duration').value = staff.duration || '';
+                        row.querySelector('.employee-reason').value = staff.reason || '';
+                    }
+                });
+            }
+            
+            if (reportData.yearsData) {
+                fillYearData(1, reportData.yearsData.year1);
+                fillYearData(2, reportData.yearsData.year2);
+                fillYearData(3, reportData.yearsData.year3);
+            }
+            
+            if (reportData.semiInternalData) {
+                fillSemiInternalData(reportData.semiInternalData);
+            }
+            
+            if (reportData.absentStudents && reportData.absentStudents.length > 0) {
+                const rows = document.querySelectorAll('#absentStudentsTable tbody tr');
+                
+                reportData.absentStudents.forEach((student, index) => {
+                    if (index < rows.length) {
+                        const row = rows[index];
+                        row.querySelector('.student-name').value = student.name || '';
+                        row.querySelector('.absent-student-class').value = student.class || '';
+                        const notice1Input = row.querySelector('.correspondence-1');
+                        const notice2Input = row.querySelector('.correspondence-2');
+                        const notice3Input = row.querySelector('.correspondence-3');
+                        
+                        if (notice1Input) notice1Input.value = student.notice1 || '';
+                        if (notice2Input) notice2Input.value = student.notice2 || '';
+                        if (notice3Input) notice3Input.value = student.notice3 || '';
+                    }
+                });
+            }
+            
+            if (reportData.notes) {
+                if (reportData.notes.supervisor) {
+                    const supervisorNotes = reportData.notes.supervisor;
+                    const supervisorContainer = document.querySelector('.notes-box-small:first-child .notes-content');
+                    if (supervisorContainer) {
+                        const textareas = supervisorContainer.querySelectorAll('textarea');
+                        textareas.forEach((textarea, index) => {
+                            if (supervisorNotes[`note${index + 1}`]) {
+                                textarea.value = supervisorNotes[`note${index + 1}`];
+                            }
+                        });
+                    }
+                }
+                
+                if (reportData.notes.supervisor_admin) {
+                    const nazerNotes = reportData.notes.supervisor_admin;
+                    const nazerContainer = document.querySelector('.notes-box-small:last-child .notes-content');
+                    if (nazerContainer) {
+                        const textareas = nazerContainer.querySelectorAll('textarea');
+                        textareas.forEach((textarea, index) => {
+                            if (nazerNotes[`note${index + 1}`]) {
+                                textarea.value = nazerNotes[`note${index + 1}`];
+                            }
+                        });
+                    }
+                }
+                
+                if (reportData.notes.director && document.getElementById('directorNotes')) {
+                    document.getElementById('directorNotes').innerHTML = reportData.notes.director;
+                }
+            }
+            
+            if (reportData.educationalSummary) {
+                fillEducationalSummary(reportData.educationalSummary);
+            }
+            
+            if (reportData.administrativeSummary) {
+                fillAdministrativeSummary(reportData.administrativeSummary);
+            }
+            
+            calculateAllTotals();
+            calculateSemiInternal();
+            
+            setTimeout(() => {
+                showMessage('success', `تم تحميل التقرير رقم ${reportData.reportNumber} بنجاح`);
+            }, 500);
+        }
+
+        function fillYearData(year, yearData) {
+            if (!yearData) return;
+            
+            const registeredInputs = document.querySelectorAll(`.years-registered[data-year="${year}"]`);
+            const absentInputs = document.querySelectorAll(`.years-input[data-year="${year}"][data-type="absent"]`);
+            const lateInputs = document.querySelectorAll(`.years-input[data-year="${year}"][data-type="late"]`);
+            
+            if (yearData.registered && yearData.registered.length > 0) {
+                registeredInputs.forEach((input, index) => {
+                    if (index < yearData.registered.length) {
+                        input.value = yearData.registered[index] || 0;
+                    }
+                });
+            }
+            
+            if (yearData.absent && yearData.absent.length > 0) {
+                absentInputs.forEach((input, index) => {
+                    if (index < yearData.absent.length) {
+                        input.value = yearData.absent[index] || 0;
+                    }
+                });
+            }
+            
+            if (yearData.late && yearData.late.length > 0) {
+                lateInputs.forEach((input, index) => {
+                    if (index < yearData.late.length) {
+                        input.value = yearData.late[index] || 0;
+                    }
+                });
+            }
+        }
+
+        function fillSemiInternalData(semiData) {
+            if (!semiData) return;
+            
+            [1, 2, 3].forEach(year => {
+                const yearData = semiData[`year${year}`];
+                if (yearData) {
+                    const registeredInput = document.querySelector(`.small-input[data-type="semi"][data-year="${year}"][data-field="registered"]`);
+                    const absentInput = document.querySelector(`.small-input[data-type="semi"][data-year="${year}"][data-field="absent"]`);
+                    const lateInput = document.querySelector(`.small-input[data-type="semi"][data-year="${year}"][data-field="late"]`);
+                    
+                    if (registeredInput) registeredInput.value = yearData.registered || 0;
+                    if (absentInput) absentInput.value = yearData.absent || 0;
+                    if (lateInput) lateInput.value = yearData.late || 0;
+                    
+                    document.getElementById(`semiPresent${year}`).textContent = yearData.present || 0;
+                    document.getElementById(`semiPercent${year}`).textContent = yearData.percent || '0%';
+                }
+            });
+        }
+
+        function fillEducationalSummary(summaryData) {
+            if (!summaryData) return;
+            
+            const categories = ['teachers', 'supervisor', 'educators', 'lab', 'main_advisor', 'advisor'];
+            
+            categories.forEach(category => {
+                const categoryData = summaryData[category];
+                if (categoryData) {
+                    const absentInput = document.querySelector(`.very-small-input[data-category="${category}"]`);
+                    const lateInput = document.querySelector(`.very-small-input[data-category="${category}"][data-type="late"]`);
+                    
+                    if (absentInput) absentInput.value = categoryData.absent || 0;
+                    if (lateInput) lateInput.value = categoryData.late || 0;
+                }
+            });
+        }
+
+        function fillAdministrativeSummary(summaryData) {
+            if (!summaryData) return;
+            
+            const categories = ['director', 'supervisor_admin', 'treasurer', 'deputy_treasurer', 'admin_staff', 'workers'];
+            
+            categories.forEach(category => {
+                const categoryData = summaryData[category];
+                if (categoryData) {
+                    const absentInput = document.querySelector(`.very-small-input[data-category="${category}"]`);
+                    const lateInput = document.querySelector(`.very-small-input[data-category="${category}"][data-type="late"]`);
+                    
+                    if (absentInput) absentInput.value = categoryData.absent || 0;
+                    if (lateInput) lateInput.value = categoryData.late || 0;
+                }
+            });
+        }
+
+        // ========== تحميل البيانات الأساسية ==========
+        function openDataLoadModal() {
+            document.getElementById('dataLoadModal').style.display = 'flex';
+        }
+
+        function closeDataLoadModal() {
+            document.getElementById('dataLoadModal').style.display = 'none';
+        }
+
+        function uploadFilesFromComputer() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.txt,.json';
+            fileInput.multiple = true;
+            fileInput.style.display = 'none';
+            
+            document.body.appendChild(fileInput);
+            
+            fileInput.addEventListener('change', async function(event) {
+                const files = event.target.files;
+                if (!files || files.length === 0) {
+                    document.body.removeChild(fileInput);
+                    return;
+                }
+                
+                showLoadingIndicator(true);
+                showMessage('info', `جاري تحميل ${files.length} ملفات...`);
+                
+                let loadedFiles = 0;
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    await processFile(file);
+                    loadedFiles++;
+                }
+                
+                showLoadingIndicator(false);
+                
+                // تفعيل الإكمال التلقائي
+                initializeAutocomplete();
+                updateClassOptions();
+                updateAbsentStudentClassSelects();
+                calculateAllTotals();
+                
+                showMessage('success', `🎉 تم تحميل ${loadedFiles} ملفات بنجاح!`);
+                
+                // اقتراح حفظ البيانات إلى السحابة
+                setTimeout(() => {
+                    if (confirm('هل تريد حفظ البيانات الأساسية إلى السحابة؟')) {
+                        saveDataToGithub();
+                    }
+                }, 1000);
+                
+                closeDataLoadModal();
+                document.body.removeChild(fileInput);
+            });
+            
+            fileInput.click();
+        }
+
+        async function processFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const content = e.target.result;
+                        const fileName = file.name.toLowerCase();
+                        
+                        if (fileName.endsWith('.json')) {
+                            // معالجة ملف JSON
+                            const data = JSON.parse(content);
+                            
+                            if (fileName.includes('teachers')) {
+                                teachersList = data;
+                            } else if (fileName.includes('employees')) {
+                                employeesList = data;
+                            } else if (fileName.includes('classes')) {
+                                classesList = data.classes || [];
+                                classRegistrations = data.registrations || {};
+                                updateRegisteredFieldsFromStorage();
+                            }
+                            
+                        } else if (fileName.endsWith('.txt')) {
+                            // معالجة ملف نصي
+                            if (fileName.includes('names') || fileName.includes('اسما')) {
+                                processNamesFile(content);
+                            } else if (fileName.includes('employees') || fileName.includes('موظفين')) {
+                                processEmployeesFile(content);
+                            } else if (fileName.includes('classes') || fileName.includes('اقسام')) {
+                                processClassesFile(content);
+                            }
+                        }
+                        
+                        resolve();
+                    } catch (error) {
+                        console.error('خطأ في معالجة الملف:', error);
+                        reject(error);
+                    }
+                };
+                
+                reader.onerror = function() {
+                    reject(new Error('فشل قراءة الملف'));
+                };
+                
+                reader.readAsText(file, 'UTF-8');
+            });
+        }
+
+        function processNamesFile(content) {
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            teachersList = [];
+            
+            lines.forEach(line => {
+                const parts = line.split(',');
+                if (parts.length >= 2) {
+                    teachersList.push({
+                        name: parts[0].trim(),
+                        subject: parts[1].trim()
+                    });
+                }
+            });
+            
+            console.log('تم تحميل الأساتذة:', teachersList.length);
+        }
+
+        function processEmployeesFile(content) {
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            employeesList = [];
+            
+            lines.forEach(line => {
+                const parts = line.split(',');
+                if (parts.length >= 2) {
+                    employeesList.push({
+                        name: parts[0].trim(),
+                        position: parts[1].trim()
+                    });
+                }
+            });
+            
+            console.log('تم تحميل الموظفين:', employeesList.length);
+        }
+
+        function processClassesFile(content) {
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            classesList = [];
+            classRegistrations = {};
+            
+            lines.forEach(line => {
+                const parts = line.split(',');
+                if (parts.length >= 2) {
+                    const className = parts[0].trim();
+                    const count = parseInt(parts[1].trim()) || 0;
+                    
+                    classesList.push(className);
+                    classRegistrations[className] = count;
+                }
+            });
+            
+            updateRegisteredFieldsFromStorage();
+            console.log('تم تحميل الأقسام:', classesList.length);
+        }
+
+        async function saveDataToGithub() {
+            if (!githubRepoUrl) {
+                showMessage('error', 'الرجاء إعداد رابط GitHub أولاً');
+                return;
+            }
+            
+            showMessage('info', '📝 قم بحفظ الملفات التالية في مجلد data في GitHub:');
+            
+            // تحضير البيانات للعرض
+            const teachersData = JSON.stringify(teachersList, null, 2);
+            const employeesData = JSON.stringify(employeesList, null, 2);
+            const classesData = JSON.stringify({
+                classes: classesList,
+                registrations: classRegistrations
+            }, null, 2);
+            
+            // عرض محرر متعدد للملفات
+            setTimeout(() => {
+                const editor = document.createElement('div');
+                editor.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+                    z-index: 4000;
+                    width: 90%;
+                    height: 85%;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                `;
+                
+                editor.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #9C27B0; padding-bottom: 10px;">
+                        <h3 style="color: #9C27B0; margin: 0;">💾 حفظ البيانات الأساسية إلى GitHub</h3>
+                        <button onclick="this.parentElement.parentElement.remove()" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">✖ إغلاق</button>
+                    </div>
+                    
+                    <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <button onclick="switchDataTab('teachers')" style="flex: 1; background: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+                                🧑‍🏫 الأساتذة
+                            </button>
+                            <button onclick="switchDataTab('employees')" style="flex: 1; background: #2196F3; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+                                👥 الموظفين
+                            </button>
+                            <button onclick="switchDataTab('classes')" style="flex: 1; background: #FF9800; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+                                🏫 الأقسام
+                            </button>
+                        </div>
+                        
+                        <div id="dataTabs" style="flex: 1; overflow: hidden;">
+                            <div id="teachersTab" style="height: 100%; display: flex; flex-direction: column;">
+                                <div style="background: #e8f5e9; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 12px;">
+                                    <strong>📝 ملف: teachers.json</strong><br>
+                                    احفظ هذا الملف في: <code>data/teachers.json</code>
+                                </div>
+                                <textarea style="flex: 1; width: 100%; padding: 15px; font-family: 'Courier New', monospace; font-size: 12px; border: 2px solid #4CAF50; border-radius: 5px; resize: none;">${teachersData}</textarea>
+                            </div>
+                            
+                            <div id="employeesTab" style="height: 100%; display: none; flex-direction: column;">
+                                <div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 12px;">
+                                    <strong>📝 ملف: employees.json</strong><br>
+                                    احفظ هذا الملف في: <code>data/employees.json</code>
+                                </div>
+                                <textarea style="flex: 1; width: 100%; padding: 15px; font-family: 'Courier New', monospace; font-size: 12px; border: 2px solid #2196F3; border-radius: 5px; resize: none;">${employeesData}</textarea>
+                            </div>
+                            
+                            <div id="classesTab" style="height: 100%; display: none; flex-direction: column;">
+                                <div style="background: #fff3e0; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 12px;">
+                                    <strong>📝 ملف: classes.json</strong><br>
+                                    احفظ هذا الملف في: <code>data/classes.json</code>
+                                </div>
+                                <textarea style="flex: 1; width: 100%; padding: 15px; font-family: 'Courier New', monospace; font-size: 12px; border: 2px solid #FF9800; border-radius: 5px; resize: none;">${classesData}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button onclick="copyCurrentData()" style="flex: 2; background: #9C27B0; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                                📋 نسخ المحتوى الحالي
+                            </button>
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" style="flex: 1; background: #666; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer;">
+                                ✖ إغلاق
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(editor);
+                
+                // تهيئة التبويبات
+                window.switchDataTab = function(tab) {
+                    document.getElementById('teachersTab').style.display = 'none';
+                    document.getElementById('employeesTab').style.display = 'none';
+                    document.getElementById('classesTab').style.display = 'none';
+                    
+                    document.getElementById(tab + 'Tab').style.display = 'flex';
+                };
+                
+                window.copyCurrentData = function() {
+                    const activeTab = document.querySelector('#dataTabs > div[style*="display: flex"]');
+                    const textarea = activeTab.querySelector('textarea');
+                    if (textarea) {
+                        textarea.select();
+                        document.execCommand('copy');
+                        showMessage('success', 'تم نسخ البيانات إلى الحافظة ✓');
+                    }
+                };
+                
+            }, 1000);
+        }
+
+        // ========== الإكمال التلقائي المحسن ==========
+        function initializeAutocomplete() {
+            console.log('تهيئة الإكمال التلقائي...');
+            
+            // إضافة مستمعات الأحداث لجميع حقول الإكمال التلقائي
+            document.addEventListener('focusin', function(e) {
+                const input = e.target;
+                if (input.classList.contains('autocomplete')) {
+                    showAutocompleteSuggestions(input);
+                }
+            });
+            
+            document.addEventListener('input', function(e) {
+                const input = e.target;
+                if (input.classList.contains('autocomplete')) {
+                    showAutocompleteSuggestions(input);
+                }
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('autocomplete') && 
+                    !e.target.closest('.autocomplete-items')) {
+                    removeAutocomplete();
+                }
+            });
+            
+            // إضافة مستمعات لأزرار التنقل
+            document.addEventListener('keydown', function(e) {
+                const input = e.target;
+                if (input.classList.contains('autocomplete')) {
+                    handleAutocompleteNavigation(e, input);
+                }
+            });
+        }
+
+        function showAutocompleteSuggestions(input) {
+            const value = input.value.trim();
+            const type = input.dataset.type; // 'teacher' أو 'employee'
+            
+            removeAutocomplete();
+            
+            if (!type) return;
+            
+            let suggestions = [];
+            
+            if (type === 'teacher') {
+                suggestions = teachersList.filter(item => 
+                    item.name.toLowerCase().includes(value.toLowerCase()) ||
+                    (item.subject && item.subject.toLowerCase().includes(value.toLowerCase()))
+                );
+            } else if (type === 'employee') {
+                suggestions = employeesList.filter(item => 
+                    item.name.toLowerCase().includes(value.toLowerCase()) ||
+                    (item.position && item.position.toLowerCase().includes(value.toLowerCase()))
+                );
+            }
+            
+            if (suggestions.length === 0 && value.length === 0) {
+                // عرض كل العناصر إذا كان الحقل فارغاً
+                suggestions = type === 'teacher' ? teachersList.slice(0, 20) : 
+                              type === 'employee' ? employeesList.slice(0, 20) : [];
+            }
+            
+            if (suggestions.length > 0) {
+                createAutocompleteList(input, suggestions, type);
+            }
+        }
+
+        function createAutocompleteList(input, items, type) {
+            const list = document.createElement('div');
+            list.className = 'autocomplete-items';
+            list.id = 'autocomplete-list';
+            
+            items.slice(0, 15).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-suggestion';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'name';
+                nameSpan.textContent = item.name;
+                
+                const infoSpan = document.createElement('span');
+                infoSpan.className = 'info';
+                infoSpan.textContent = type === 'teacher' ? item.subject : item.position;
+                
+                div.appendChild(nameSpan);
+                div.appendChild(infoSpan);
+                
+                div.addEventListener('click', function() {
+                    input.value = item.name;
+                    
+                    // تعبئة الحقل المرتبط
+                    const row = input.closest('tr');
+                    if (row) {
+                        if (type === 'teacher') {
+                            const subjectField = row.querySelector('.teacher-subject');
+                            if (subjectField) {
+                                subjectField.value = item.subject || '';
+                            }
+                        } else if (type === 'employee') {
+                            const positionField = row.querySelector('.employee-position');
+                            if (positionField) {
+                                positionField.value = item.position || '';
+                            }
+                        }
+                    }
+                    
+                    removeAutocomplete();
+                });
+                
+                list.appendChild(div);
+            });
+            
+            const rect = input.getBoundingClientRect();
+            list.style.position = 'fixed';
+            list.style.top = (rect.bottom + window.scrollY) + 'px';
+            list.style.right = (window.innerWidth - rect.right) + 'px';
+            list.style.width = (rect.width * 1.5) + 'px';
+            list.style.maxHeight = '250px';
+            list.style.overflowY = 'auto';
+            list.style.zIndex = '10000';
+            list.style.backgroundColor = 'white';
+            
+            document.body.appendChild(list);
+        }
+
+        function handleAutocompleteNavigation(e, input) {
+            const list = document.getElementById('autocomplete-list');
+            if (!list) return;
+            
+            const items = list.querySelectorAll('.autocomplete-suggestion');
+            if (items.length === 0) return;
+            
+            let activeIndex = -1;
+            
+            items.forEach((item, index) => {
+                if (item.style.backgroundColor === 'rgb(33, 150, 243)') {
+                    activeIndex = index;
+                }
+            });
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) % items.length;
+                updateActiveItem(items, activeIndex);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1 + items.length) % items.length;
+                updateActiveItem(items, activeIndex);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeIndex > -1) {
+                    items[activeIndex].click();
+                }
+            } else if (e.key === 'Escape') {
+                removeAutocomplete();
+            }
+        }
+
+        function updateActiveItem(items, index) {
+            items.forEach(item => {
+                item.style.backgroundColor = '';
+                item.style.color = '';
+            });
+            
+            if (index > -1 && items[index]) {
+                items[index].style.backgroundColor = '#2196F3';
+                items[index].style.color = 'white';
+                items[index].scrollIntoView({ block: 'nearest' });
+            }
+        }
+
+        function removeAutocomplete() {
+            const list = document.getElementById('autocomplete-list');
+            if (list) {
+                list.remove();
+            }
+        }
+
+        function updateAbsentStudentClassSelects() {
+            const classSelects = document.querySelectorAll('.absent-student-class');
+            classSelects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value=""></option>';
+                
+                classesList.forEach(className => {
+                    const option = document.createElement('option');
+                    option.value = className;
+                    option.textContent = className;
+                    select.appendChild(option);
+                });
+                
+                if (classesList.includes(currentValue)) {
+                    select.value = currentValue;
+                }
+            });
+        }
+
+        // ========== الحسابات المحدثة ==========
+        function calculateAllTotals() {
+            calculateYearTotals(3);
+            calculateYearTotals(2);
+            calculateYearTotals(1);
+            updateExternalStudents();
+        }
+
+        function calculateYearTotals(year) {
+            const registeredInputs = document.querySelectorAll(`.years-registered[data-year="${year}"]`);
+            const absentInputs = document.querySelectorAll(`.years-input[data-year="${year}"][data-type="absent"]`);
+            const lateInputs = document.querySelectorAll(`.years-input[data-year="${year}"][data-type="late"]`);
+            
+            let totalRegistered = 0;
+            let totalAbsent = 0;
+            let totalLate = 0;
+            
+            registeredInputs.forEach(input => totalRegistered += parseInt(input.value) || 0);
+            absentInputs.forEach(input => totalAbsent += parseInt(input.value) || 0);
+            lateInputs.forEach(input => totalLate += parseInt(input.value) || 0);
+            
+            document.getElementById(`totalRegistered${year}`).textContent = totalRegistered;
+            document.getElementById(`totalAbsent${year}`).textContent = totalAbsent;
+            document.getElementById(`totalLate${year}`).textContent = totalLate;
+        }
+
+        function updateExternalStudents() {
+            let totalRegistered = 0;
+            let totalAbsent = 0;
+            let totalLate = 0;
+            let totalPresent = 0;
+            
+            [3, 2, 1].forEach(year => {
+                const reg = parseInt(document.getElementById(`totalRegistered${year}`).textContent) || 0;
+                const abs = parseInt(document.getElementById(`totalAbsent${year}`).textContent) || 0;
+                const late = parseInt(document.getElementById(`totalLate${year}`).textContent) || 0;
+                const present = reg - abs;
+                const percent = reg > 0 ? Math.round((present / reg) * 100) : 0;
+                
+                document.getElementById(`externalRegistered${year}`).textContent = reg;
+                document.getElementById(`externalAbsent${year}`).textContent = abs;
+                document.getElementById(`externalLate${year}`).textContent = late;
+                document.getElementById(`externalPresent${year}`).textContent = present;
+                document.getElementById(`externalPercent${year}`).textContent = percent + '%';
+                
+                totalRegistered += reg;
+                totalAbsent += abs;
+                totalLate += late;
+                totalPresent += present;
+            });
+            
+            const totalPercent = totalRegistered > 0 ? Math.round((totalPresent / totalRegistered) * 100) : 0;
+            
+            document.getElementById('externalRegisteredTotal').textContent = totalRegistered;
+            document.getElementById('externalAbsentTotal').textContent = totalAbsent;
+            document.getElementById('externalLateTotal').textContent = totalLate;
+            document.getElementById('externalPresentTotal').textContent = totalPresent;
+            document.getElementById('externalPercentTotal').textContent = totalPercent + '%';
+        }
+
+        function calculateSemiInternal() {
+            let totalRegistered = 0;
+            let totalAbsent = 0;
+            let totalLate = 0;
+            let totalPresent = 0;
+            
+            [1, 2, 3].forEach(year => {
+                const registeredInput = document.querySelector(`.small-input[data-type="semi"][data-year="${year}"][data-field="registered"]`);
+                const absentInput = document.querySelector(`.small-input[data-type="semi"][data-year="${year}"][data-field="absent"]`);
+                const lateInput = document.querySelector(`.small-input[data-type="semi"][data-year="${year}"][data-field="late"]`);
+                
+                const registered = parseInt(registeredInput?.value) || 0;
+                const absent = parseInt(absentInput?.value) || 0;
+                const late = parseInt(lateInput?.value) || 0;
+                const present = registered - absent;
+                const percent = registered > 0 ? Math.round((present / registered) * 100) : 0;
+                
+                document.getElementById(`semiPresent${year}`).textContent = present;
+                document.getElementById(`semiPercent${year}`).textContent = percent + '%';
+                
+                totalRegistered += registered;
+                totalAbsent += absent;
+                totalLate += late;
+                totalPresent += present;
+            });
+            
+            const totalPercent = totalRegistered > 0 ? Math.round((totalPresent / totalRegistered) * 100) : 0;
+            
+            document.getElementById('semiRegisteredTotal').textContent = totalRegistered;
+            document.getElementById('semiAbsentTotal').textContent = totalAbsent;
+            document.getElementById('semiLateTotal').textContent = totalLate;
+            document.getElementById('semiPresentTotal').textContent = totalPresent;
+            document.getElementById('semiPercentTotal').textContent = totalPercent + '%';
+        }
+
+        function calculateEducationalSummary() {
+            console.log('تم تحديث الحوصلة التربوية');
+        }
+
+        function calculateAdministrativeSummary() {
+            console.log('تم تحديث الحوصلة الإدارية');
+        }
+
+        // ========== التعامل مع تعديل عدد المسجلين ==========
+        function handleRegisteredChange(input) {
+            const className = input.dataset.class;
+            const newValue = parseInt(input.value) || 0;
+            
+            if (newValue > 0) {
+                classRegistrations[className] = newValue;
+            }
+            
+            calculateAllTotals();
+        }
+
+        // ========== استيراد تقرير من ملف ==========
+        function importReportFromFile() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.json';
+            fileInput.style.display = 'none';
+            
+            document.body.appendChild(fileInput);
+            
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    document.body.removeChild(fileInput);
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const reportData = JSON.parse(e.target.result);
+                        loadReportIntoForm(reportData);
+                        showMessage('success', 'تم استيراد التقرير بنجاح');
+                    } catch (error) {
+                        showMessage('error', 'خطأ في تنسيق الملف: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+                
+                document.body.removeChild(fileInput);
+            });
+            
+            fileInput.click();
+        }
+
+        // ========== حفظ التقرير كملف ==========
+        function saveReportAsFile() {
+            if (!currentUser) {
+                showMessage('error', 'الرجاء تسجيل الدخول أولاً');
+                return;
+            }
+            
+            if (currentUser.username !== 'director' && isReportLocked) {
+                showMessage('error', 'التقرير مغلق للقراءة فقط. يمكن للمدير فقط التعديل بعد الساعة 17:00');
+                return;
+            }
+            
+            const reportData = collectReportData();
+            
+            if (!reportData.reportNumber || !reportData.reportDate) {
+                showMessage('error', 'الرجاء تعبئة رقم التقرير والتاريخ');
+                return;
+            }
+            
+            const fileName = `تقرير_${reportData.reportNumber}_${reportData.reportDate.replace(/\//g, '-')}.json`;
+            const dataStr = JSON.stringify(reportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', fileName);
+            linkElement.click();
+            
+            showMessage('success', `✓ تم حفظ التقرير رقم ${reportData.reportNumber} كملف`);
+            
+            // مسح التقرير الحالي
+            clearCurrentReport();
+        }
+
+        // ========== تصدير Excel ==========
+        function openExportModal() {
+            if (!currentUser) {
+                showMessage('error', 'الرجاء تسجيل الدخول أولاً');
+                return;
+            }
+            
+            document.getElementById('exportModal').style.display = 'flex';
+            selectedReports = [];
+            
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 7);
+            
+            const startDateStr = formatDateToArabic(yesterday);
+            const endDateStr = formatDateToArabic(today);
+            
+            document.getElementById('startDate').value = startDateStr;
+            document.getElementById('endDate').value = endDateStr;
+            
+            document.querySelectorAll('.date-input-arabic').forEach(input => {
+                input.style.borderColor = '#4CAF50';
+            });
+            
+            document.getElementById('exportPreview').innerHTML = `
+                <div style="color: #666; padding: 10px; text-align: center;">
+                    📅 اختر الفترة المطلوبة للتصدير<br>
+                    <small style="font-size: 12px; color: #999;">استخدم الصيغة: يوم-شهر-سنة</small>
+                </div>
+            `;
+        }
+
+        function formatDateToArabic(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+
+        function parseArabicDate(dateString) {
+            if (!dateString) return null;
+            
+            const parts = dateString.split('-');
+            if (parts.length !== 3) return null;
+            
+            const day = parseInt(parts[0]);
+            const month = parseInt(parts[1]);
+            const year = parseInt(parts[2]);
+            
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+            
+            const date = new Date(year, month - 1, day);
+            
+            if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+                return null;
+            }
+            
+            return date;
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function searchReportsForExport() {
+            showMessage('error', 'لتصدير Excel، يجب رفع ملفات JSON إلى GitHub أولاً ثم تحميلها هنا');
+        }
+
+        function exportToExcel() {
+            showMessage('error', 'لتصدير Excel، يجب رفع ملفات JSON إلى GitHub أولاً ثم تحميلها هنا');
+        }
+
+        // ========== إعدادات تواريخ اللغة العربية ==========
+        function setupArabicDateInputs() {
+            const dateInputs = document.querySelectorAll('.date-input-arabic');
+            
+            dateInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = '#4CAF50';
+                    this.style.backgroundColor = '#f8fff8';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.borderColor = '';
+                    this.style.backgroundColor = '';
+                    
+                    const value = this.value.trim();
+                    if (value) {
+                        const date = parseArabicDate(value);
+                        if (!date) {
+                            this.style.borderColor = '#f44336';
+                            showMessage('error', 'صيغة التاريخ غير صحيحة. استخدم: يوم-شهر-سنة');
+                        } else {
+                            this.style.borderColor = '#4CAF50';
+                        }
+                    }
+                });
+                
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#FF9800';
+                });
+            });
+        }
+
+        // ========== إظهار وإخفاء عناصر التحكم ==========
+        function toggleControls() {
+            const controls = document.getElementById('controlsPanel');
+            controls.classList.toggle('collapsed');
+        }
+
+        // ========== وظائف الرسائل ==========
+        function showMessage(type, message) {
+            const messageTypes = {
+                success: document.getElementById('successMessage'),
+                error: document.getElementById('errorMessage'),
+                info: document.getElementById('infoMessage'),
+                warning: document.getElementById('warningMessage')
+            };
+            
+            const messageDiv = messageTypes[type];
+            if (!messageDiv) return;
+            
+            messageDiv.innerHTML = message;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showLoadingIndicator(show) {
+            const indicator = document.getElementById('loadingIndicator');
+            if (show) {
+                indicator.style.display = 'block';
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
